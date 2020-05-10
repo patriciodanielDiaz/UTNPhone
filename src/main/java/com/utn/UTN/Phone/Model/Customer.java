@@ -31,5 +31,9 @@ public class Customer
 
 
 
-    //@JoinColumn()
+    @JoinColumn(name = "idcity", unique = true,insertable=false, updatable=false)
+
+    @OneToOne(cascade = CascadeType.ALL)
+
+    private City city_name;
 }
