@@ -1,5 +1,6 @@
 package com.utn.UTN.Phone.Controller;
 
+import com.utn.UTN.Phone.Model.LoginRequestDto;
 import com.utn.UTN.Phone.Model.User;
 import com.utn.UTN.Phone.Service.UserService;
 import com.utn.UTN.Phone.exceptions.UserAlreadyExistsException;
@@ -21,29 +22,20 @@ public class UserController {
         this.userService = userService;
     }
 
-    /*public User login(String username, String password) throws  ValidationException {
-        if ((username != null) && (password != null)) {
-                return userService.login(username, password);
 
-        } else {
-            throw new ValidationException();
-        }
-    }*/
+    /// metodos de prueba login
 
-    /*public User createUser(User user) throws UserAlreadyExistsException {
-        return userService.createUser(user);
+    @ResponseBody @RequestMapping("/login")
+    public String login(@RequestBody LoginRequestDto loginRequestDto) throws  ValidationException {
+
+       User user = userService.login(loginRequestDto.getUsername(),loginRequestDto.getPassword());
+
+        return user.getName();
     }
 
-    public void removeUser(User user) throws UserNotExistException {
-        userService.removeUser(user);
-    }*/
-
-
-
-
-    /// metodos de prueba de fncionamiento
+    /// metodos de prueba de funcionamiento
     @GetMapping("/")
-    public List<User> getPet(){
+    public List<User> getUser(){
         return userService.getAll();
     }
 

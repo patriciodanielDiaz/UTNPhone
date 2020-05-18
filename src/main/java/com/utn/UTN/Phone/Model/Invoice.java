@@ -1,47 +1,55 @@
 package com.utn.UTN.Phone.Model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import java.util.List;
+import java.util.Date;
 
 @Entity
-@Table(name = "cities")
+@Table(name = "invoices")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
-public class City {
+public class Invoice {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "idinvoice")
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY )
-    @JoinColumn(name = "idprovince")
+    @JoinColumn(name = "iduser")
     @JsonBackReference
-    private Province province;
+    private User user;
 
-    @NotNull
-    private String city;
+    @Column(name = "totalcalls")
+    private Integer totalcalls;
 
-    @NotNull
-    private int prefix;
+    @Column(name = "total")
+    private Float total;
 
-    @OneToMany(mappedBy = "city")
-    private List<User> users;
+    @Column(name = "cost")
+    private Float cost;
+
+    @Column(name = "paymentdate")
+    private Date paymentDate;
+
+    @Column(name = "expiration")
+    private Date expiration;
+
+    @Column(name = "state")
+    private Boolean state;
 
     @Column(name = "create_at")
     private String createAt;
 
     @Column(name = "update_at")
     private String updateAt;
+
 
 }

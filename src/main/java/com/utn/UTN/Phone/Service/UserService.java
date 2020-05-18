@@ -19,18 +19,17 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    public User login(String username, String password) {
+        return  userRepository.login(username,password);
+    }
 
+
+    //----------------------------------------------------------------------------
     public void addUser(User user) {
         userRepository.save(user);
     }
 
     public List<User> getAll() {
-       return  userRepository.findAll();
+        return  userRepository.findAll();
     }
-
-    /*public User login(String username, String password){
-        User user = userRepository.login(username,password);
-        return user;
-        //return Optional.ofNullable(user).orElseThrow(() -> new UserNotExistException());
-    }*/
 }

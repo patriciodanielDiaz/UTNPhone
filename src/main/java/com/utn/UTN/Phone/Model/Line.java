@@ -1,5 +1,6 @@
 package com.utn.UTN.Phone.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -7,26 +8,33 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 @Entity
-@Table(name = "provinces")
+@Table(name = "lines_users")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
-public class Province {
-
+public class Line {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "idline")
     private Integer id;
 
     @NotNull
-    private String province;
+    private String linenumber;
 
-    @OneToMany(mappedBy = "province")
-    private List<City> cities;
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "idtype")
+    @JsonBackReference(value="lineLineType")
+    private LineType lineType;
+
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "iduser")
+    @JsonBackReference(value="lineUser")
+    private User user;
 
     @Column(name = "create_at")
     private String createAt;
@@ -34,4 +42,5 @@ public class Province {
     @Column(name = "update_at")
     private String updateAt;
 
+    //agregar campo baja logica
 }

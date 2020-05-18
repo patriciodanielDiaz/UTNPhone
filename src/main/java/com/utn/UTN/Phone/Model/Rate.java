@@ -7,29 +7,31 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.sql.Time;
+import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "calls")
+@Table(name = "rates")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
-public class Call {
+public class Rate {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idcall")
+    @Column(name = "idrate")
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY )
-    @JoinColumn(name = "origincall")
-    @JsonBackReference
-    private Line originCall;
+    @NotNull
+    private String type;
 
-    @ManyToOne(fetch = FetchType.LAZY )
-    @JoinColumn(name = "destinationcall")
-    @JsonBackReference
-    private Line destinationCall;
+    @NotNull
+    @Column(name = "pricexmin")
+    private Float pricexMin;
+
+    @NotNull
+    @Column(name = "costprice")
+    private Float costPrice;
 
     @ManyToOne(fetch = FetchType.LAZY )
     @JoinColumn(name = "origincity")
@@ -41,29 +43,9 @@ public class Call {
     @JsonBackReference
     private Line destinationCity;
 
-    private Time durationtime;
-
-    private float price;
-
-    @Column(name = "costprice")
-    private float costPrice;
-
-    private Double total;
-
-    @ManyToOne(fetch = FetchType.LAZY )
-    @JoinColumn(name = "idinvoice")
-    @JsonBackReference
-    private Invoice idInvoice;
-
-    @ManyToOne(fetch = FetchType.LAZY )
-    @JoinColumn(name = "idrate")
-    @JsonBackReference
-    private Rate rate;
-
     @Column(name = "create_at")
     private String createAt;
 
     @Column(name = "update_at")
     private String updateAt;
-
 }
