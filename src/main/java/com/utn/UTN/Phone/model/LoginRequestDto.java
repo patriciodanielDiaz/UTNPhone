@@ -1,4 +1,4 @@
-package com.utn.UTN.Phone.Model;
+package com.utn.UTN.Phone.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

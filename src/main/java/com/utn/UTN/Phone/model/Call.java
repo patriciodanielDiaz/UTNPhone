@@ -1,4 +1,4 @@
-package com.utn.UTN.Phone.Model;
+package com.utn.UTN.Phone.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
@@ -21,41 +21,41 @@ public class Call {
     @Column(name = "idcall")
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY )
+    @ManyToOne(fetch = FetchType.EAGER )
     @JoinColumn(name = "origincall")
     @JsonBackReference
     private Line originCall;
 
-    @ManyToOne(fetch = FetchType.LAZY )
+    @ManyToOne(fetch = FetchType.EAGER )
     @JoinColumn(name = "destinationcall")
     @JsonBackReference
     private Line destinationCall;
 
-    @ManyToOne(fetch = FetchType.LAZY )
+    @ManyToOne(fetch = FetchType.EAGER )
     @JoinColumn(name = "origincity")
     @JsonBackReference
-    private Line originCity;
+    private City originCity;
 
-    @ManyToOne(fetch = FetchType.LAZY )
+    @ManyToOne(fetch = FetchType.EAGER )
     @JoinColumn(name = "destinationcity")
     @JsonBackReference
-    private Line destinationCity;
+    private City destinationCity;
 
     private Time durationtime;
 
-    private float price;
+    private Float price;
 
     @Column(name = "costprice")
-    private float costPrice;
+    private Float costPrice;
 
     private Double total;
 
-    @ManyToOne(fetch = FetchType.LAZY )
+    @ManyToOne(fetch = FetchType.EAGER )
     @JoinColumn(name = "idinvoice")
     @JsonBackReference
     private Invoice idInvoice;
 
-    @ManyToOne(fetch = FetchType.LAZY )
+    @ManyToOne(fetch = FetchType.EAGER )
     @JoinColumn(name = "idrate")
     @JsonBackReference
     private Rate rate;

@@ -1,6 +1,6 @@
-package com.utn.UTN.Phone.Repository;
+package com.utn.UTN.Phone.repository;
 
-import com.utn.UTN.Phone.Model.City;
+import com.utn.UTN.Phone.model.City;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CityRepository extends JpaRepository<City,Integer> {

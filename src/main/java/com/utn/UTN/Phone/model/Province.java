@@ -1,4 +1,4 @@
-package com.utn.UTN.Phone.Model;
+package com.utn.UTN.Phone.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,7 +25,7 @@ public class Province {
     @NotNull
     private String province;
 
-    @OneToMany(mappedBy = "province")
+    @OneToMany(mappedBy = "province", fetch = FetchType.LAZY)
     private List<City> cities;
 
     @Column(name = "create_at")

@@ -1,4 +1,4 @@
-package com.utn.UTN.Phone.Model;
+package com.utn.UTN.Phone.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
@@ -35,13 +35,13 @@ public class Rate {
 
     @ManyToOne(fetch = FetchType.LAZY )
     @JoinColumn(name = "origincity")
-    @JsonBackReference
-    private Line originCity;
+    @JsonBackReference(value="rateOriginCity")
+    private City originCity;
 
     @ManyToOne(fetch = FetchType.LAZY )
     @JoinColumn(name = "destinationcity")
-    @JsonBackReference
-    private Line destinationCity;
+    @JsonBackReference(value="rateDestinationCity")
+    private City destinationCity;
 
     @Column(name = "create_at")
     private String createAt;

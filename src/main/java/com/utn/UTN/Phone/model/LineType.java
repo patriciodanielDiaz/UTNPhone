@@ -1,7 +1,6 @@
-package com.utn.UTN.Phone.Model;
+package com.utn.UTN.Phone.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,36 +11,26 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Entity
-@Table(name = "cities")
+@Table(name = "linetypes")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
-public class City {
-
+public class LineType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "idtype")
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY )
-    @JoinColumn(name = "idprovince")
-    @JsonBackReference
-    private Province province;
-
     @NotNull
-    private String city;
+    private String type;
 
-    @NotNull
-    private int prefix;
-
-    @OneToMany(mappedBy = "city")
-    private List<User> users;
+    @OneToMany(mappedBy = "lineType")
+    private List<Line> lines;
 
     @Column(name = "create_at")
     private String createAt;
 
     @Column(name = "update_at")
     private String updateAt;
-
 }

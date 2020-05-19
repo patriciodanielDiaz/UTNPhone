@@ -1,4 +1,4 @@
-package com.utn.UTN.Phone.Model;
+package com.utn.UTN.Phone.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
@@ -52,8 +52,14 @@ public class User {
     @JsonBackReference(value="userCity")
     private City city;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     private List<Line> lines;
+
+    @OneToMany(mappedBy = "user" ,fetch = FetchType.LAZY)
+    private List<Invoice> invoices;
+
+    @Column(name = "is_available")
+    private Boolean isAvailable;
 
     @Column(name = "create_at")
     private String createAt;

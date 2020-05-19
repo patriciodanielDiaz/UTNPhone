@@ -1,7 +1,7 @@
-package com.utn.UTN.Phone.Service;
+package com.utn.UTN.Phone.service;
 
-import com.utn.UTN.Phone.Model.City;
-import com.utn.UTN.Phone.Repository.CityRepository;
+import com.utn.UTN.Phone.model.City;
+import com.utn.UTN.Phone.repository.CityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;

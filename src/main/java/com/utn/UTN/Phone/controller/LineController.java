@@ -1,7 +1,7 @@
-package com.utn.UTN.Phone.Controller;
+package com.utn.UTN.Phone.controller;
 
-import com.utn.UTN.Phone.Model.Line;
-import com.utn.UTN.Phone.Service.LineService;
+import com.utn.UTN.Phone.model.Line;
+import com.utn.UTN.Phone.service.LineService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

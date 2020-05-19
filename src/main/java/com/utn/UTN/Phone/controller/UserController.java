@@ -1,10 +1,8 @@
-package com.utn.UTN.Phone.Controller;
+package com.utn.UTN.Phone.controller;
 
-import com.utn.UTN.Phone.Model.LoginRequestDto;
-import com.utn.UTN.Phone.Model.User;
-import com.utn.UTN.Phone.Service.UserService;
-import com.utn.UTN.Phone.exceptions.UserAlreadyExistsException;
-import com.utn.UTN.Phone.exceptions.UserNotExistException;
+import com.utn.UTN.Phone.model.LoginRequestDto;
+import com.utn.UTN.Phone.model.User;
+import com.utn.UTN.Phone.service.UserService;
 import com.utn.UTN.Phone.exceptions.ValidationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

@@ -1,6 +1,6 @@
-package com.utn.UTN.Phone.Repository;
+package com.utn.UTN.Phone.repository;
 
-import com.utn.UTN.Phone.Model.User;
+import com.utn.UTN.Phone.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

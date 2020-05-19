@@ -1,7 +1,7 @@
-package com.utn.UTN.Phone.Service;
+package com.utn.UTN.Phone.service;
 
-import com.utn.UTN.Phone.Model.Line;
-import com.utn.UTN.Phone.Repository.LineRepository;
+import com.utn.UTN.Phone.model.Line;
+import com.utn.UTN.Phone.repository.LineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

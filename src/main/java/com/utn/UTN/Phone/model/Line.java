@@ -1,10 +1,7 @@
-package com.utn.UTN.Phone.Model;
+package com.utn.UTN.Phone.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -36,11 +33,20 @@ public class Line {
     @JsonBackReference(value="lineUser")
     private User user;
 
+    //no me sirve mostrar esto por ahora
+    /*@OneToMany(mappedBy = "originCity" ,fetch = FetchType.LAZY)
+    private List<Rate> rateOrigin;
+
+    @OneToMany(mappedBy = "destinationCity", fetch = FetchType.LAZY)
+    private List<Rate> rateDestination;*/
+
+    @Column(name = "is_available")
+    private Boolean isAvailable;
+
     @Column(name = "create_at")
     private String createAt;
 
     @Column(name = "update_at")
     private String updateAt;
 
-    //agregar campo baja logica
 }

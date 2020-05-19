@@ -1,4 +1,4 @@
-package com.utn.UTN.Phone.Model;
+package com.utn.UTN.Phone.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Entity
@@ -22,9 +23,10 @@ public class Invoice {
     @Column(name = "idinvoice")
     private Integer id;
 
+    @NotNull
     @ManyToOne(fetch = FetchType.LAZY )
     @JoinColumn(name = "iduser")
-    @JsonBackReference
+    @JsonBackReference(value="invoiceUser")
     private User user;
 
     @Column(name = "totalcalls")
