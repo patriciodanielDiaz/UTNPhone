@@ -27,11 +27,19 @@ public class Line {
     @JsonBackReference(value="lineLineType")
     private LineType lineType;
 
+    public String getType(){
+        return lineType.getType();
+    }
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "iduser")
     @JsonBackReference(value="lineUser")
     private User user;
+
+    public Integer getUserId(){
+        return user.getId();
+    }
 
     //no me sirve mostrar esto por ahora
     /*@OneToMany(mappedBy = "originCity" ,fetch = FetchType.LAZY)

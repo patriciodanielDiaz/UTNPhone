@@ -29,6 +29,10 @@ public class Invoice {
     @JsonBackReference(value="invoiceUser")
     private User user;
 
+    public Integer getUserId(){
+        return user.getId();
+    }
+
     @Column(name = "totalcalls")
     private Integer totalcalls;
 

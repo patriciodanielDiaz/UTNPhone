@@ -29,6 +29,10 @@ public class City {
     @JsonBackReference
     private Province province;
 
+    public String provinceName(){
+        return province.getProvince();
+    }
+
     @NotNull
     private String city;
 

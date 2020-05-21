@@ -10,13 +10,13 @@ import org.springframework.stereotype.Component;
 @EnableAsync
 public class SessionScheduler {
 
-    /*@Autowired
+    @Autowired
     SessionManager sessionManager;
 
     @Async
     @Scheduled(fixedRate = 60000)
     public void expiresSessions() {
         sessionManager.expireSessions();
-    }*/
+    }
 
 }

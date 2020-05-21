@@ -1,14 +1,12 @@
 package com.utn.UTN.Phone.controller;
 
-import com.utn.UTN.Phone.model.Call;
-import com.utn.UTN.Phone.model.City;
-import com.utn.UTN.Phone.model.Invoice;
-import com.utn.UTN.Phone.model.Rate;
-import com.utn.UTN.Phone.service.CallService;
-import com.utn.UTN.Phone.service.CityService;
-import com.utn.UTN.Phone.service.InvoiceService;
-import com.utn.UTN.Phone.service.RateService;
+import com.utn.UTN.Phone.exceptions.RecordNotExistsException;
+import com.utn.UTN.Phone.model.*;
+import com.utn.UTN.Phone.service.*;
+import com.utn.UTN.Phone.session.SessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -22,19 +20,19 @@ public class PruebaController {
     private RateService rateService;
     private CallService callService;
     private InvoiceService invoiceService;
+    private LineService lineService;
+    private SessionManager sessionManager;
 
     @Autowired
-    public PruebaController(CityService cityService,RateService rateService,CallService callService,InvoiceService invoiceService) { this.cityService = cityService; this.rateService = rateService;this.callService = callService;this.invoiceService = invoiceService;}
+    public PruebaController(CityService cityService,RateService rateService,CallService callService,InvoiceService invoiceService,LineService lineService,SessionManager sessionManager) { this.cityService = cityService; this.rateService = rateService;this.callService = callService;this.invoiceService = invoiceService;this.lineService = lineService;this.sessionManager=sessionManager;}
 
 
 
     /// metodos de prueba de funcionamiento
 
     //--city-----------------------------------------------------------------
-    @GetMapping("/city")
-    public List<City> getCity(){
-        return cityService.getAll();
-    }
+
+                                        //prueba session
 
     @PostMapping("/city")
     public void addCity(@RequestBody @Valid City city){
@@ -65,4 +63,5 @@ public class PruebaController {
 
     @PostMapping("/invoice")
     public void addInvoice(@RequestBody @Valid Invoice invoice){ invoiceService.addInvoice(invoice); }
+
 }

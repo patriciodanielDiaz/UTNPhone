@@ -38,10 +38,18 @@ public class Rate {
     @JsonBackReference(value="rateOriginCity")
     private City originCity;
 
+    public String getOriginCityName(){
+        return originCity.getCity();
+    }
+
     @ManyToOne(fetch = FetchType.LAZY )
     @JoinColumn(name = "destinationcity")
     @JsonBackReference(value="rateDestinationCity")
     private City destinationCity;
+
+    public String getDestinationCityName(){
+        return destinationCity.getCity();
+    }
 
     @Column(name = "create_at")
     private String createAt;

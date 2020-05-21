@@ -52,6 +52,10 @@ public class User {
     @JsonBackReference(value="userCity")
     private City city;
 
+    public Integer getCityId(){
+        return city.getId();
+    }
+
     @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
     private List<Line> lines;
 
@@ -67,6 +71,5 @@ public class User {
     @Column(name = "update_at")
     private String updateAt;
 
-    //agregar campo baja logica
 
 }

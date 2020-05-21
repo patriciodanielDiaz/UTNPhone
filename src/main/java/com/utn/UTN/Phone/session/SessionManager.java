@@ -7,7 +7,7 @@ import java.util.*;
 @Component
 public class SessionManager {
 
-    /*Map<String, Session> sessionMap = new Hashtable<>();
+    Map<String, Session> sessionMap = new Hashtable<>();
 
     int sesionExpiration = 60;
 
@@ -41,5 +41,5 @@ public class SessionManager {
 
     public User getCurrentUser(String token) {
         return getSession(token).getLoggedUser();
-    }*/
+    }
 }

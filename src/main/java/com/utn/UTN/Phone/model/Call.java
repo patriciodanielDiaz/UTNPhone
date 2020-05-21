@@ -26,20 +26,36 @@ public class Call {
     @JsonBackReference
     private Line originCall;
 
+    public String getOriginNumber(){
+        return originCall.getLinenumber();
+    }
+
     @ManyToOne(fetch = FetchType.EAGER )
     @JoinColumn(name = "destinationcall")
     @JsonBackReference
     private Line destinationCall;
+
+    public String getDestinationNumber(){
+        return destinationCall.getLinenumber();
+    }
 
     @ManyToOne(fetch = FetchType.EAGER )
     @JoinColumn(name = "origincity")
     @JsonBackReference
     private City originCity;
 
+    public String getOriginCityName(){
+        return originCity.getCity();
+    }
+
     @ManyToOne(fetch = FetchType.EAGER )
     @JoinColumn(name = "destinationcity")
     @JsonBackReference
     private City destinationCity;
+
+    public String getDestinationCityName(){
+        return destinationCity.getCity();
+    }
 
     private Time durationtime;
 
