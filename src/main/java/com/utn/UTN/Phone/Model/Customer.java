@@ -10,7 +10,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name="Customers")
+@Table(name="users")
 public class Customer
 {
     @Id
@@ -18,6 +18,10 @@ public class Customer
 
     @Column(name="id")
     private Integer id;
+    @Column(name ="user")
+    private String user;
+    @Column(name="password")
+    private String password;
     @Column(name="name")
     private String name;
     @Column(name ="lastname")
@@ -26,8 +30,8 @@ public class Customer
     private String dni;
     @Column(name="idcity")
     private Integer idcity;
-    @Column(name = "iduser")
-    private Integer iduser;
+    @Column(name = "usertype")
+    private String usertype;
 
 
 
