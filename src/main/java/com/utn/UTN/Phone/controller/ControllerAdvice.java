@@ -1,18 +1,21 @@
 package com.utn.UTN.Phone.controller;
 
 import com.utn.UTN.Phone.dto.ErrorDto;
-import com.utn.UTN.Phone.exceptions.InvalidLoginException;
-import com.utn.UTN.Phone.exceptions.NoDataFound;
-import com.utn.UTN.Phone.exceptions.UserNotExistException;
-import com.utn.UTN.Phone.exceptions.ValidationException;
+import com.utn.UTN.Phone.exceptions.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+
 @RestControllerAdvice
  public class ControllerAdvice extends ResponseEntityExceptionHandler {
+
+        @ResponseStatus(HttpStatus.FORBIDDEN)
+        @ExceptionHandler(PermissionDeniedException.class)
+        public ErrorDto handlePermissionDeniedException(InvalidLoginException exc) { return new ErrorDto(0, "Permission Denied"); }
 
         @ResponseStatus(HttpStatus.UNAUTHORIZED)
         @ExceptionHandler(InvalidLoginException.class)
@@ -23,20 +26,23 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
         @ResponseStatus(HttpStatus.BAD_REQUEST)
         @ExceptionHandler(ValidationException.class)
         public ErrorDto handleValidationException(ValidationException exc) {
-            return new ErrorDto(2,"username and password must have a value");
+            return new ErrorDto(2,"incomplete data");
         }
 
         @ResponseStatus(HttpStatus.BAD_REQUEST)
         @ExceptionHandler(UserNotExistException.class)
-        public ErrorDto handleUserNotExists() {
-            return new ErrorDto(3, "User not exists");
-        }
+        public ErrorDto handleUserNotExists() { return new ErrorDto(3, "User not exists"); }
 
         @ResponseStatus(HttpStatus.NO_CONTENT)
         @ExceptionHandler(NoDataFound.class)
-        public ErrorDto handleNoContent() {
+        public ErrorDto handleNoDataFound() { return new ErrorDto(4, "No Content"); }
 
-            return new ErrorDto(4, "No Content");
-        }
+        @ResponseStatus(HttpStatus.CONFLICT)
+        @ExceptionHandler(DuplicateDNI.class)
+        public ErrorDto handleDuplicateDNI() { return new ErrorDto(5, "Failing validation :duplicate DNI "); }
 
-    }
+        @ResponseStatus(HttpStatus.CONFLICT)
+        @ExceptionHandler(DuplicateUserName.class)
+        public ErrorDto handleDuplicateUserName() { return new ErrorDto(6, "Failing validation :duplicate UserName "); }
+
+}

@@ -46,7 +46,7 @@ public class User {
         empleado,cliente;
     }
     //----------------------------------------------------------
-    @NotNull
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idcity")
     @JsonBackReference(value="userCity")

@@ -10,6 +10,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
+import java.util.Objects;
+
 @RestController
 @RequestMapping("/")
 public class LoginController {
@@ -40,7 +47,6 @@ public class LoginController {
         }
         return response;
     }
-
 
     @PostMapping("/logout")
     public ResponseEntity logout(@RequestHeader("Authorization") String token) {

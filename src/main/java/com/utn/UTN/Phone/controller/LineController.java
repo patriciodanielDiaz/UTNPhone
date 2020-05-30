@@ -48,12 +48,7 @@ public class LineController {
         if (currentUser == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        List<Line> lines = null;
-        try {
-            lines = lineService.getLinesByUser(currentUser.getId());
-        } catch (Exception e) {
-            throw new NoDataFound();
-        }
+        List<Line>   lines = lineService.getLinesByUser(currentUser.getId());
         return (lines.size() > 0) ? ResponseEntity.ok(lines) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

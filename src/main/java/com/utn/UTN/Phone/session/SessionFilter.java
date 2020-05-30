@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Service
-public class SessionFilter{/* extends OncePerRequestFilter {
+public class SessionFilter extends OncePerRequestFilter {
 
     @Autowired
     private SessionManager sessionManager;
@@ -29,5 +29,5 @@ public class SessionFilter{/* extends OncePerRequestFilter {
         } else {
             response.setStatus(HttpStatus.FORBIDDEN.value());
         }
-    }*/
+    }
 }
