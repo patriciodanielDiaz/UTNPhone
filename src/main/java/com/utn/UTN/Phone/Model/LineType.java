@@ -21,8 +21,4 @@ public class LineType {
     @Column(name = "type")
     private String type;
 
-    //@JoinColumn(name = "idtype", unique=false,insertable=false, updatable=false)
-    @OneToMany
-    private List<LinesUser> linesusers;
-
 }

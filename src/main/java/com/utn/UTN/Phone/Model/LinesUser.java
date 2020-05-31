@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,9 +27,15 @@ public class LinesUser {
     private Integer iduser;
 
 
-    @JoinColumn(name="idtype", insertable=false, updatable=false)
 
-    @ManyToOne
+
+
+    @JoinColumn(name = "idtype", unique = true,insertable=false, updatable=false)
+
+    @OneToOne(cascade = CascadeType.ALL)
+
     private LineType lineType;
+
+
 
 }
