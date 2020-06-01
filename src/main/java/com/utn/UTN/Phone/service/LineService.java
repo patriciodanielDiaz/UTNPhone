@@ -24,14 +24,17 @@ public class LineService {
     public void addLine(Line line) { lineRepository.save(line);}
 
     public List<Line> getAll() throws RecordNotExistsException {
-
         List<Line> lines = lineRepository.findAll();
         return Optional.ofNullable(lines).orElseThrow(() -> new RecordNotExistsException());
-
     }
 
-    public List<Line> getLinesByUser(Integer id) throws NoDataFound {
+    public List<Line> getLinesByUser(Integer id) throws RecordNotExistsException {
         List<Line> lines = lineRepository.getLinesByUser(id);
-        return Optional.ofNullable(lines).orElseThrow(() -> new NoDataFound());
+        return Optional.ofNullable(lines).orElseThrow(() -> new RecordNotExistsException());
     }
+    public Line getLineByNumber(String num) throws RecordNotExistsException {
+        Line line = lineRepository.getLineByNumber(num);
+        return Optional.ofNullable(line).orElseThrow(() -> new RecordNotExistsException());
+    }
+
 }

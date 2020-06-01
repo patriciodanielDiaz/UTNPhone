@@ -1,6 +1,7 @@
 package com.utn.UTN.Phone.controller;
 
 import com.utn.UTN.Phone.dto.LoginDto;
+import com.utn.UTN.Phone.model.Call;
 import com.utn.UTN.Phone.model.Line;
 import com.utn.UTN.Phone.model.User;
 import com.utn.UTN.Phone.service.UserService;
@@ -27,23 +28,22 @@ public class UserController {
     @Autowired
     public UserController(UserService userService, SessionManager sessionManager) {
         this.userService = userService;
-        this.sessionManager=sessionManager;
+        this.sessionManager = sessionManager;
     }
 
     //--------------------------------------------------------------------------------------------------
     @PostMapping("/register")
-    public ResponseEntity createUser(@RequestBody User addUser) throws URISyntaxException, DuplicateUserName, DuplicateDNI {
+    public ResponseEntity createUser(@RequestBody @Valid User addUser) throws URISyntaxException, DuplicateUserName, DuplicateDNI {
 
         ResponseEntity response;
         User user;
         user = userService.findByDni(addUser.getDni());
 
-        if(user != null){
+        if (user != null) {
             throw new DuplicateDNI();
-        }
-        else{
+        } else {
             user = userService.findByUser(addUser.getUser());
-            if(user != null){
+            if (user != null) {
                 throw new DuplicateUserName();
             }
         }
@@ -52,60 +52,39 @@ public class UserController {
         return response;
     }
 
+    //--------------------------------------------------------------------------------------------------
     @PutMapping("/update")
-    public ResponseEntity updateUser(@RequestHeader("Authorization") String sessionToken,@RequestBody User userUpdate) throws PermissionDeniedException {
+    public ResponseEntity updateUser(@RequestHeader("Authorization") String sessionToken,
+                                     @RequestBody @Valid User userUpdate)
+                                     throws PermissionDeniedException {
 
         User currentUser = sessionManager.getCurrentUser(sessionToken);
         if (currentUser == null) {
             throw new PermissionDeniedException();
         }
 
-        userService.updateUser(userUpdate,currentUser.getId());
+        userService.updateUser(userUpdate, currentUser.getId());
         return ResponseEntity.ok().build();
     }
 
-    // -------------------------no funciona cri cri----------------------------------
+    // ------------------no funciona cry cry -------------------------------------------------------------
     @PostMapping("/remove")
-    public ResponseEntity removeUser(@RequestHeader("Authorization") String sessionToken,@RequestBody LoginDto userDto) throws PermissionDeniedException, InvalidLoginException {
+    public ResponseEntity removeUser(@RequestHeader("Authorization") String sessionToken,
+                                     @RequestBody @Valid LoginDto userDto)
+                                     throws PermissionDeniedException, InvalidLoginException {
 
 
-        User currentUser = sessionManager.getCurrentUser(sessionToken);
+        User currentUser = sessionManager.getCurrentUser(sessionToken); //ERROR ,me lo trae lazy, no me deja entrar a los metodos
         System.out.println(currentUser);
 
         if (currentUser == null) {
             throw new PermissionDeniedException();
-        }
-        else if(userDto.getUsername()== currentUser.getUser() && userDto.getPassword()==currentUser.getPassword()){
+        } else if (userDto.getUsername() == currentUser.getUser() && userDto.getPassword() == currentUser.getPassword()) {
             userService.removeUser(currentUser.getId());
-        }
-        else{
+        } else {
             throw new InvalidLoginException();
         }
         return ResponseEntity.ok().build();
     }
 
-    /*
-
-    public User getUserById(Integer userId) {
-        return userService.getUser(userId);
-    }
-
-    public User createUser(User user) throws UserAlreadyExistsException {
-        return userService.createUser(user);
-    }
-
-
-*/
-
-
-    /// metodos de prueba de funcionamiento
-    @GetMapping("/")
-    public List<User> getUser(){
-        return userService.getAll();
-    }
-
-    //@PostMapping("/")
-    //public void addUser(@RequestBody @Valid User user){
-     //   userService.addUser(user);
-    //}
 }

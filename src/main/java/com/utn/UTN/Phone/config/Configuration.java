@@ -26,4 +26,3 @@ import org.springframework.scheduling.annotation.EnableScheduling;
             return registration;
         }
     }
-

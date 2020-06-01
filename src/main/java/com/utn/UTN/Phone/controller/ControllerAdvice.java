@@ -15,7 +15,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 
         @ResponseStatus(HttpStatus.FORBIDDEN)
         @ExceptionHandler(PermissionDeniedException.class)
-        public ErrorDto handlePermissionDeniedException(InvalidLoginException exc) { return new ErrorDto(0, "Permission Denied"); }
+        public ErrorDto handlePermissionDeniedException(PermissionDeniedException exc) { return new ErrorDto(0, "Permission Denied"); }
 
         @ResponseStatus(HttpStatus.UNAUTHORIZED)
         @ExceptionHandler(InvalidLoginException.class)
@@ -34,8 +34,8 @@ import java.sql.SQLIntegrityConstraintViolationException;
         public ErrorDto handleUserNotExists() { return new ErrorDto(3, "User not exists"); }
 
         @ResponseStatus(HttpStatus.NO_CONTENT)
-        @ExceptionHandler(NoDataFound.class)
-        public ErrorDto handleNoDataFound() { return new ErrorDto(4, "No Content"); }
+        @ExceptionHandler(RecordNotExistsException.class)
+        public ErrorDto handleRecordNotExistsException() { return new ErrorDto(4, "No Content"); }
 
         @ResponseStatus(HttpStatus.CONFLICT)
         @ExceptionHandler(DuplicateDNI.class)

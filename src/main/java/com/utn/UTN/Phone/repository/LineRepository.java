@@ -8,6 +8,9 @@ import java.util.List;
 
 public interface LineRepository extends JpaRepository<Line,Integer> {
 
-    @Query(value = "Select * from lines_users where iduser = ?1",nativeQuery = true)
+    @Query(value = "Select * from lines_users where iduser = ?1 and is_available=1",nativeQuery = true)
     List<Line> getLinesByUser(Integer id);
+
+    @Query(value = "Select * from lines_users where linenumber = ?1 and is_available=1",nativeQuery = true)
+    Line getLineByNumber(String num);
 }

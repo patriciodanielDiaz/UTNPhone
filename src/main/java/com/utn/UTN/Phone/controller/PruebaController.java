@@ -50,13 +50,6 @@ public class PruebaController {
         rateService.addRate(rate);
     }
 
-    //--call-----------------------------------------------------------------
-    @GetMapping("/call")
-    public List<Call> getCall(){ return callService.getAll(); }
-
-    @PostMapping("/call")
-    public void addCall(@RequestBody @Valid Call call){ callService.addCall(call); }
-
     //--invoice-----------------------------------------------------------------
     @GetMapping("/invoice")
     public List<Invoice> getInvoice(){ return invoiceService.getAll(); }

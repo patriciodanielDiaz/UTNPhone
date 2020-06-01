@@ -1,7 +1,9 @@
 package com.utn.UTN.Phone.controller;
 
 import com.utn.UTN.Phone.exceptions.NoDataFound;
+import com.utn.UTN.Phone.exceptions.PermissionDeniedException;
 import com.utn.UTN.Phone.exceptions.RecordNotExistsException;
+import com.utn.UTN.Phone.exceptions.UserNotExistException;
 import com.utn.UTN.Phone.model.Line;
 import com.utn.UTN.Phone.model.User;
 import com.utn.UTN.Phone.service.LineService;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/line")
@@ -26,34 +29,38 @@ public class LineController {
         this.sessionManager=sessionManager;
     }
 
-    @GetMapping("/all/")
-    public ResponseEntity<List<Line>> getAllLine(@RequestHeader("Authorization") String sessionToken) throws RecordNotExistsException {
-
-        User currentUser = sessionManager.getCurrentUser(sessionToken);
-        if (currentUser == null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-        List<Line> lines = null;
-        try {
-            lines = lineService.getAll();
-        } catch (Exception e) {
-            throw new RecordNotExistsException();
-        }
-        return (lines.size() > 0) ? ResponseEntity.ok(lines) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
+    //-------------commonUser-------------------------------------------------------------------------------------------------
     @GetMapping("/")
-    public ResponseEntity<List<Line>> getUserLines(@RequestHeader("Authorization") String sessionToken) throws NoDataFound {
+    public ResponseEntity<List<Line>> getUserLines(@RequestHeader("Authorization") String sessionToken)
+                                                    throws UserNotExistException, RecordNotExistsException {
 
-        User currentUser = sessionManager.getCurrentUser(sessionToken);
-        if (currentUser == null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+        User currentUser = getCurrentUser(sessionToken);
         List<Line>   lines = lineService.getLinesByUser(currentUser.getId());
+
         return (lines.size() > 0) ? ResponseEntity.ok(lines) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PostMapping("/")
-    public void addLine(@RequestBody @Valid Line line){
-        lineService.addLine(line);
+
+    //-------------admin-------------------------------------------------------------------------------------------------
+
+    @GetMapping("/all/")
+    public ResponseEntity<List<Line>> getLineByUser(@RequestHeader("Authorization") String sessionToken,
+                                                    @RequestParam(value = "userId", required = false) Integer userId)
+            throws UserNotExistException, RecordNotExistsException, PermissionDeniedException{
+
+        User currentUser = getCurrentUser(sessionToken);
+        if(currentUser.getUserType()!= User.Type.empleado) throw new PermissionDeniedException();
+        List<Line> lines=null;
+
+        if(userId!=null) lines = lineService.getLinesByUser(userId);
+        else lines = lineService.getAll();
+
+        return (lines.size() > 0) ? ResponseEntity.ok(lines) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+
+    //---------------------------------------------------------------------------------------------------------------
+    private User getCurrentUser(String sessionToken) throws UserNotExistException {
+        return Optional.ofNullable(sessionManager.getCurrentUser(sessionToken)).orElseThrow(UserNotExistException::new);
     }
 }
