@@ -20,6 +20,9 @@ public class CallDto {
 
     private Time durationtime;
 
+    //agregarv la fecha y hora
+    //private
+
     /*○ Número de origen
     **○ Número de destino
     **○ Duración de la llamada

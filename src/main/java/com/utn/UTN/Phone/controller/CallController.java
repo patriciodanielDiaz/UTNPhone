@@ -8,6 +8,7 @@ import com.utn.UTN.Phone.model.Line;
 import com.utn.UTN.Phone.model.User;
 import com.utn.UTN.Phone.service.CallService;
 import com.utn.UTN.Phone.service.LineService;
+import com.utn.UTN.Phone.service.UserService;
 import com.utn.UTN.Phone.session.SessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,10 +29,11 @@ public class CallController{
 
     private CallService callService;
     private LineService lineService;
+    private UserService userService;
     private SessionManager sessionManager;
 
     @Autowired
-    public CallController (CallService callService,LineService lineService,SessionManager sessionManager){this.callService=callService;this.lineService=lineService;this.sessionManager=sessionManager;}
+    public CallController (CallService callService,LineService lineService,SessionManager sessionManager,UserService userService){this.callService=callService;this.lineService=lineService;this.sessionManager=sessionManager;this.userService=userService;}
 
     //----------------------commonUser-------------------------------------------------------------------------------------
 
@@ -77,4 +79,17 @@ public class CallController{
         return Optional.ofNullable(sessionManager.getCurrentUser(sessionToken)).orElseThrow(UserNotExistException::new);
     }
 
+
+    //---------------Parcial German-------------------------------------------------------------------
+    @GetMapping("/parcial")
+    private ResponseEntity<User> getCallsmall(String sessionToken) throws PermissionDeniedException, RecordNotExistsException {
+
+        User currentUser = sessionManager.getCurrentUser(sessionToken);
+        if(currentUser.getUserType()!= User.Type.empleado) throw new PermissionDeniedException();
+
+        Call call=callService.getCallSmall();
+        User user =userService.getUserByNum(call.getOriginCall().getLinenumber());
+
+        return (user!= null) ? ResponseEntity.ok(user) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

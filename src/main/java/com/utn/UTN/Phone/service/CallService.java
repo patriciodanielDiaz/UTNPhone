@@ -39,4 +39,12 @@ public class CallService {
         List<Call> lines = callRepository.getCallsByDate(line.getId(),fromDate,toDate);
         return Optional.ofNullable(lines).orElseThrow(() -> new RecordNotExistsException());
     }
+
+
+    //---------------Parcial German-------------------------------------------------------------------
+
+    public Call getCallSmall() throws RecordNotExistsException {
+        Call call=callRepository.getCallSmall();
+        return Optional.ofNullable(call).orElseThrow(() -> new RecordNotExistsException());
+    }
 }

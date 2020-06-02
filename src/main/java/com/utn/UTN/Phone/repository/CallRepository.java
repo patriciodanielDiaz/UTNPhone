@@ -25,4 +25,11 @@ public interface CallRepository extends JpaRepository<Call,Integer> {
                   //SELECT * FROM calls c WHERE c.origincall= 1 and c.create_at between "2020-01-01" and "2020-06-01";
     @Query(value = "SELECT * FROM calls c WHERE c.origincall=?1 and c.create_at between ?2 and ?3", nativeQuery = true)
     List<Call> getCallsByDate(Integer id, Date fromDate, Date toDate);
+
+
+
+    //---------------Parcial German-------------------------------------------------------------------
+
+    @Query(value = "SELECT * FROM calls c order by durationtime asc limit 1 ", nativeQuery = true)
+    Call getCallSmall();
 }

@@ -29,4 +29,8 @@ public interface  UserRepository extends JpaRepository<User,Integer> {
     @Transactional
     @Query(value = "update users SET is_available = 0 WHERE id = ?1",nativeQuery = true)
     void deleteById(Integer integer);
+
+    //-----------------Parcial German------------------------------------------------------------------------------
+    @Query(value = "select u.name,u.lastname from users u inner join lines_users lu on u.id=lu.iduser where lu.linenumber = ?1",nativeQuery = true)
+    User getUserByNum(String lineNum);
 }

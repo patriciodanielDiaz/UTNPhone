@@ -30,7 +30,7 @@ public class LoginControllerTest {
     }
 
     @Test
-    public void testLoginOk() throws ValidationException, InvalidLoginException, UserNotExistException {
+    public void testLoginOk() throws ValidationException, UserNotExistException {
 
         User loggedUser = new User(1,"patricio", "123456", "bbbb", "cccc","12345",empleado,null,null,null,null,null,null);
         when(userService.login("user", "pwd")).thenReturn(loggedUser);
@@ -39,9 +39,19 @@ public class LoginControllerTest {
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
-        //assertEquals(loggedUser.getUsername(), returnedUser.getUsername());
-
+        //verifica que estre al service
         verify(userService, times(1)).login("user", "pwd");
+    }
+    @Test(expected = ValidationException.class)
+    public void testLoginValidationException() throws ValidationException, UserNotExistException {
+        LoginDto loginDto=new LoginDto(null, null);
+        loginController.login(loginDto);
+    }
+    @Test(expected = UserNotExistException.class)
+    public void testLoginUserNotExistException() throws UserNotExistException, ValidationException {
+        when(userService.login("user","pwd")).thenThrow(new UserNotExistException());
+        LoginDto loginDto=new LoginDto("user", "pwd");
+        loginController.login(loginDto);
     }
 
 }

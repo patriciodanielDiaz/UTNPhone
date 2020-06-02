@@ -1,6 +1,7 @@
 package com.utn.UTN.Phone.service;
 
 import com.utn.UTN.Phone.exceptions.*;
+import com.utn.UTN.Phone.model.Line;
 import com.utn.UTN.Phone.model.User;
 import com.utn.UTN.Phone.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,5 +53,12 @@ public class UserService {
 
     public void removeUser(Integer id) {
         userRepository.deleteById(id);
+    }
+
+
+    //-------------Parcial German------------------------------------------------------------------
+    public User getUserByNum(String lineNum) {
+
+        return userRepository.getUserByNum(lineNum);
     }
 }
