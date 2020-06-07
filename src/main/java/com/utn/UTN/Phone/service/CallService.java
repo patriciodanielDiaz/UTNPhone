@@ -3,6 +3,7 @@ package com.utn.UTN.Phone.service;
 import com.utn.UTN.Phone.dto.CallDto;
 import com.utn.UTN.Phone.exceptions.RecordNotExistsException;
 import com.utn.UTN.Phone.model.Call;
+import com.utn.UTN.Phone.model.City;
 import com.utn.UTN.Phone.model.Line;
 import com.utn.UTN.Phone.model.User;
 import com.utn.UTN.Phone.repository.CallRepository;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -24,11 +26,8 @@ public class CallService {
         this.callRepository = callRepository;
     }
 
-
     //-----------------------------------------------------------------------------------------------
-    public void addCall(Line origin, Line destination, Time duration) {
-        callRepository.addcall(origin.getId(),destination.getId(),duration);
-    }
+    public Integer addCall(Integer idOrigin, Integer idDest ,Time duration, Timestamp dateTime) { return callRepository.addcall(idOrigin,idDest,duration,dateTime);}
 
     public List<Call> getCallsByNumber(Line line) throws RecordNotExistsException {
         List<Call> lines = callRepository.getCallsByNumber(line.getId());
@@ -36,7 +35,7 @@ public class CallService {
     }
 
     public List<Call> getCallsByDate(Line line, Date fromDate, Date toDate) throws RecordNotExistsException {
-        List<Call> lines = callRepository.getCallsByDate(line.getId(),fromDate,toDate);
+        List<Call> lines = callRepository.getCallsByDate(line.getId(), fromDate, toDate);
         return Optional.ofNullable(lines).orElseThrow(() -> new RecordNotExistsException());
     }
 
@@ -44,7 +43,8 @@ public class CallService {
     //---------------Parcial German-------------------------------------------------------------------
 
     public Call getCallSmall() throws RecordNotExistsException {
-        Call call=callRepository.getCallSmall();
+        Call call = callRepository.getCallSmall();
         return Optional.ofNullable(call).orElseThrow(() -> new RecordNotExistsException());
     }
+
 }

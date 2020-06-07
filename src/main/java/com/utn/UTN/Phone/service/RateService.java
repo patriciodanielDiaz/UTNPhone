@@ -17,10 +17,9 @@ public class RateService {
         this.rateRepository = rateRepository;
     }
 
-
     public void addRate(Rate rate) { rateRepository.save(rate);}
 
-    public List<Rate> getAll() {
-        return  rateRepository.findAll();
-    }
+    public List<Rate> getAll() { return  rateRepository.findAll();}
+
+    public List<Rate> getByCity(String city) {  return rateRepository.getByCity(city);}
 }

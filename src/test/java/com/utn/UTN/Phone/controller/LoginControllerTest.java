@@ -32,14 +32,14 @@ public class LoginControllerTest {
     @Test
     public void testLoginOk() throws ValidationException, UserNotExistException {
 
-        User loggedUser = new User(1,"patricio", "123456", "bbbb", "cccc","12345",empleado,null,null,null,null,null,null);
+        User loggedUser = new User(1,"patricio", "123456", "bbbb", "cccc","12345",empleado,null,null,null,null);
         when(userService.login("user", "pwd")).thenReturn(loggedUser);
         LoginDto loginDto=new LoginDto("user", "pwd");
         ResponseEntity responseEntity = loginController.login(loginDto);
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
-        //verifica que estre al service
+        //verifica que entre al service
         verify(userService, times(1)).login("user", "pwd");
     }
     @Test(expected = ValidationException.class)

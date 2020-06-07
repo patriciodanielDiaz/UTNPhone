@@ -55,13 +55,13 @@ public class User {
     public Integer getCityId(){
         return city.getId();
     }
-
-    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
+/*
+    @OneToMany(mappedBy = "user")
     private List<Line> lines;
 
-    @OneToMany(mappedBy = "user" ,fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user")
     private List<Invoice> invoices;
-
+*/
     @Column(name = "is_available")
     private Boolean isAvailable;
 

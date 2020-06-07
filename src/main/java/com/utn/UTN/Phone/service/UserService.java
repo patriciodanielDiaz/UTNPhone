@@ -1,8 +1,9 @@
 package com.utn.UTN.Phone.service;
 
+import com.utn.UTN.Phone.dto.UserDto;
 import com.utn.UTN.Phone.exceptions.*;
-import com.utn.UTN.Phone.model.Line;
 import com.utn.UTN.Phone.model.User;
+import com.utn.UTN.Phone.proyection.ProfileProyection;
 import com.utn.UTN.Phone.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,39 +27,55 @@ public class UserService {
     //----------------------------------------------------------------------------
 
     public User login(String username, String password) throws UserNotExistException {
-       User u = userRepository.login(username,password);
-       return Optional.ofNullable(u).orElseThrow(() -> new UserNotExistException());
+        User u = userRepository.login(username, password);
+        return Optional.ofNullable(u).orElseThrow(() -> new UserNotExistException());
     }
 
-    public User findByDni(String dni) throws DuplicateDNI {
+    public User findByDni(String dni) {
         return userRepository.findByDni(dni);
     }
 
-    public User findByUser(String user) throws DuplicateUserName {
+    public User findByUser(String user) {
         return userRepository.findByUser(user);
     }
 
-    public void addUser(User user) {
-        userRepository.save(user);
+    public User addUser(User user) {
+        return userRepository.save(user);
     }
 
-    public List<User> getAll() {
-        return  userRepository.findAll();
+    public void addCommonUser(UserDto userDto) throws SQLException {
+        userRepository.addCommonUser(userDto.getUser(), userDto.getPassword(), userDto.getName(), userDto.getLastname(), userDto.getDni(), userDto.getCity());
     }
 
-    public void updateUser(User userUpdate,Integer id) {
+    public void updateCommonUser(UserDto userDto, Integer id) {
+        userRepository.updateCommonUser(userDto.getUser(), userDto.getPassword(), userDto.getName(), userDto.getLastname(), userDto.getDni(), userDto.getCity(), id);
+    }
 
-        userRepository.updateUser(userUpdate.getUser(),userUpdate.getPassword(),userUpdate.getName(),userUpdate.getLastname(),userUpdate.getDni(),userUpdate.getCity().getId(),id);
+    public List<User> getAll() throws UserNotExistException {
+        List<User> list = userRepository.findAll();
+        return Optional.ofNullable(list).orElseThrow(() -> new UserNotExistException());
+    }
+
+    public void updateUser(User userUpdate, Integer id) {
+        userRepository.updateUser(userUpdate.getUser(), userUpdate.getPassword(), userUpdate.getName(), userUpdate.getLastname(), userUpdate.getDni(), userUpdate.getCity().getId(), id);
     }
 
     public void removeUser(Integer id) {
         userRepository.deleteById(id);
     }
 
+    public User getById(Integer id) {
+        return userRepository.getById(id);
+    }
+
+    public ProfileProyection getProfile(Integer id) throws UserNotExistException {
+        ProfileProyection u = userRepository.getProfile(id);
+        return Optional.ofNullable(u).orElseThrow(() -> new UserNotExistException());
+    }
 
     //-------------Parcial German------------------------------------------------------------------
     public User getUserByNum(String lineNum) {
-
         return userRepository.getUserByNum(lineNum);
     }
+
 }

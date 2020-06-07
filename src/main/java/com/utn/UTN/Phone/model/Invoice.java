@@ -24,8 +24,8 @@ public class Invoice {
     private Integer id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY )
     @JoinColumn(name = "iduser")
+    @ManyToOne(fetch = FetchType.EAGER )
     @JsonBackReference(value="invoiceUser")
     private User user;
 

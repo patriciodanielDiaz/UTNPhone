@@ -3,14 +3,14 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 19-05-2020 a las 05:55:25
+-- Tiempo de generación: 07-06-2020 a las 04:14:27
 -- Versión del servidor: 5.7.26
 -- Versión de PHP: 7.2.18
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
 START TRANSACTION;
-set global time_zone = "-03:00"
+SET time_zone = "-03:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -21,6 +21,60 @@ set global time_zone = "-03:00"
 --
 -- Base de datos: `utnphone`
 --
+
+DELIMITER $$
+--
+-- Procedimientos
+--
+DROP PROCEDURE IF EXISTS `sp_delete_line`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_delete_line` (IN `pnumber` VARCHAR(50))  BEGIN
+	
+	Declare id_remove int default 0;
+    Declare is_remove boolean default false;
+    
+		SELECT idline into id_remove
+	    FROM lines_users lu 
+	    WHERE lu.linenumber=pnumber;
+	
+	if (id_remove = 0) then
+		
+		SIGNAL sqlstate '11111' SET MESSAGE_TEXT = 'line does not exist', 			MYSQL_ERRNO = 9999;
+	else 
+		UPDATE lines_users SET is_available= 0
+		WHERE idline=id_remove;
+        set is_remove = true;
+		
+	end if;
+    select is_remove;
+
+END$$
+
+DROP PROCEDURE IF EXISTS `sp_insert_common_user`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_insert_common_user` (IN `username` VARCHAR(50), IN `pass` VARCHAR(50), IN `firstname` VARCHAR(50), IN `lastname` VARCHAR(50), IN `dni` VARCHAR(50), IN `city` VARCHAR(50))  BEGIN
+	Declare cityId int;
+
+    set cityId = (SELECT id 
+					FROM cities c 
+					WHERE c.city = city);
+
+	INSERT users (user, password, name, lastname, dni, idcity) 
+    VALUES (username, pass, firstname, lastname,dni,cityId);
+END$$
+
+DROP PROCEDURE IF EXISTS `sp_update_common_user`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_common_user` (IN `username` VARCHAR(50), IN `pass` VARCHAR(50), IN `firstname` VARCHAR(50), IN `lastname` VARCHAR(50), IN `dni` VARCHAR(50), IN `city` VARCHAR(50), IN `idUser` INT)  BEGIN
+	Declare cityId int;
+
+    set cityId = (SELECT id 
+					FROM cities c 
+					WHERE c.city = city);
+
+UPDATE users SET user=username, password=pass, name=firstname, lastname=lastname, dni=dni, idcity=cityId 
+WHERE id=iduser;
+
+END$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -50,14 +104,39 @@ CREATE TABLE IF NOT EXISTS `calls` (
   KEY `destinationcall` (`destinationcall`),
   KEY `origincity` (`origincity`),
   KEY `destinationcity` (`destinationcity`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `calls`
 --
 
 INSERT INTO `calls` (`idcall`, `origincall`, `destinationcall`, `origincity`, `destinationcity`, `durationtime`, `price`, `costprice`, `total`, `idinvoice`, `idrate`, `create_at`, `update_at`) VALUES
-(1, 2, 1, 1, 1, '02:00:00', NULL, NULL, NULL, 1, 1, '2020-05-11 03:33:25', '2020-05-11 03:33:25');
+(1, 1, 2, 1, 1, '02:00:00', NULL, NULL, NULL, 1, 1, '2020-05-11 03:33:25', '2020-06-01 05:16:55'),
+(2, 1, 2, 1, 1, '02:00:00', NULL, NULL, NULL, 2, 1, '2020-06-01 05:16:00', '2020-06-04 04:43:14'),
+(3, 2, 1, 1, 1, '00:03:20', 12.6, 12.8, 4.65, 3, 1, '2020-06-04 03:52:48', '2020-06-04 04:43:31');
+
+--
+-- Disparadores `calls`
+--
+DROP TRIGGER IF EXISTS `tbi_calls_create`;
+DELIMITER $$
+CREATE TRIGGER `tbi_calls_create` BEFORE INSERT ON `calls` FOR EACH ROW begin
+        
+        set new.create_at = CURRENT_TIMESTAMP;
+        set new.update_at = CURRENT_TIMESTAMP;
+
+end
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `tbu_calls_update`;
+DELIMITER $$
+CREATE TRIGGER `tbu_calls_update` BEFORE UPDATE ON `calls` FOR EACH ROW begin
+        
+        set new.update_at = CURRENT_TIMESTAMP;
+
+end
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -95,6 +174,29 @@ INSERT INTO `cities` (`id`, `idprovince`, `city`, `prefix`, `create_at`, `update
 (9, 1, 'Pinamar', 2254, '2020-05-11 02:59:02', '2020-05-11 02:59:02'),
 (10, 1, 'Zarate', 3487, '2020-05-11 02:59:03', '2020-05-11 02:59:03');
 
+--
+-- Disparadores `cities`
+--
+DROP TRIGGER IF EXISTS `tbi_cities_create`;
+DELIMITER $$
+CREATE TRIGGER `tbi_cities_create` BEFORE INSERT ON `cities` FOR EACH ROW begin
+        
+        set new.create_at = CURRENT_TIMESTAMP;
+        set new.update_at = CURRENT_TIMESTAMP;
+
+end
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `tbu_cities_update`;
+DELIMITER $$
+CREATE TRIGGER `tbu_cities_update` BEFORE UPDATE ON `cities` FOR EACH ROW begin
+        
+        set new.update_at = CURRENT_TIMESTAMP;
+
+end
+$$
+DELIMITER ;
+
 -- --------------------------------------------------------
 
 --
@@ -115,14 +217,39 @@ CREATE TABLE IF NOT EXISTS `invoices` (
   `update_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`idinvoice`),
   KEY `iduser` (`iduser`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `invoices`
 --
 
 INSERT INTO `invoices` (`idinvoice`, `iduser`, `totalcalls`, `total`, `cost`, `paymentdate`, `expiration`, `state`, `create_at`, `update_at`) VALUES
-(1, 1, 1, 10, 10, '2020-05-31', '2020-05-31', 0, '2020-05-18 23:26:10', '2020-05-18 23:26:10');
+(1, 1, 1, 10, 10, '2020-05-31', '2020-05-31', 0, '2020-05-18 23:26:10', '2020-05-18 23:26:10'),
+(2, 1, 1, 10.5, 12.65, '2020-05-01', '2020-05-01', 0, '2020-06-04 03:48:44', '2020-06-04 03:48:44'),
+(3, 2, 1, 4.65, 98.4, '2020-01-01', '2020-01-01', 0, '2020-01-01 03:49:46', '2020-06-04 04:33:17');
+
+--
+-- Disparadores `invoices`
+--
+DROP TRIGGER IF EXISTS `tbi_invoices_create`;
+DELIMITER $$
+CREATE TRIGGER `tbi_invoices_create` BEFORE INSERT ON `invoices` FOR EACH ROW begin
+        
+        set new.create_at = CURRENT_TIMESTAMP;
+        set new.update_at = CURRENT_TIMESTAMP;
+
+end
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `tbu_invoices_update`;
+DELIMITER $$
+CREATE TRIGGER `tbu_invoices_update` BEFORE UPDATE ON `invoices` FOR EACH ROW begin
+        
+        set new.update_at = CURRENT_TIMESTAMP;
+
+end
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -143,15 +270,39 @@ CREATE TABLE IF NOT EXISTS `lines_users` (
   UNIQUE KEY `linenumber` (`linenumber`),
   KEY `idtype` (`idtype`),
   KEY `iduser` (`iduser`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `lines_users`
 --
 
 INSERT INTO `lines_users` (`idline`, `linenumber`, `idtype`, `iduser`, `create_at`, `update_at`, `is_available`) VALUES
-(1, '5893239', 2, 1, '2020-05-11 03:19:49', '2020-05-11 03:19:49', 1),
-(2, '4841271', 1, 2, '2020-05-11 03:20:16', '2020-05-11 03:20:16', 1);
+(1, '5893239', 2, 1, '2020-05-11 03:19:49', '2020-06-07 02:03:04', 1),
+(2, '4841271', 1, 2, '2020-05-11 03:20:16', '2020-05-11 03:20:16', 1),
+(3, '554433', 2, 1, '2020-06-06 05:42:57', '2020-06-06 05:42:57', 1);
+
+--
+-- Disparadores `lines_users`
+--
+DROP TRIGGER IF EXISTS `tbi_lines_users_create`;
+DELIMITER $$
+CREATE TRIGGER `tbi_lines_users_create` BEFORE INSERT ON `lines_users` FOR EACH ROW begin
+        
+        set new.create_at = CURRENT_TIMESTAMP;
+        set new.update_at = CURRENT_TIMESTAMP;
+
+end
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `tbu_lines_users_update`;
+DELIMITER $$
+CREATE TRIGGER `tbu_lines_users_update` BEFORE UPDATE ON `lines_users` FOR EACH ROW begin
+        
+        set new.update_at = CURRENT_TIMESTAMP;
+ 
+end
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -176,6 +327,29 @@ CREATE TABLE IF NOT EXISTS `linetypes` (
 INSERT INTO `linetypes` (`idtype`, `type`, `create_at`, `update_at`) VALUES
 (1, 'Residencial', '2020-05-11 03:17:36', '2020-05-11 03:17:36'),
 (2, 'Celular', '2020-05-11 03:17:36', '2020-05-11 03:17:36');
+
+--
+-- Disparadores `linetypes`
+--
+DROP TRIGGER IF EXISTS `tbi_linetypes_create`;
+DELIMITER $$
+CREATE TRIGGER `tbi_linetypes_create` BEFORE INSERT ON `linetypes` FOR EACH ROW begin
+        
+        set new.create_at = CURRENT_TIMESTAMP;
+        set new.update_at = CURRENT_TIMESTAMP;
+
+end
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `tbu_linetypes_update`;
+DELIMITER $$
+CREATE TRIGGER `tbu_linetypes_update` BEFORE UPDATE ON `linetypes` FOR EACH ROW begin
+        
+        set new.update_at = CURRENT_TIMESTAMP;
+
+end
+$$
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -222,6 +396,29 @@ INSERT INTO `provinces` (`id`, `province`, `create_at`, `update_at`) VALUES
 (23, 'Tucuman', '2020-05-11 02:38:26', '2020-05-11 02:38:26'),
 (29, 'Santa Cruz', '2020-05-11 02:38:26', '2020-05-11 02:38:26');
 
+--
+-- Disparadores `provinces`
+--
+DROP TRIGGER IF EXISTS `tbi_provinces_create`;
+DELIMITER $$
+CREATE TRIGGER `tbi_provinces_create` BEFORE INSERT ON `provinces` FOR EACH ROW begin
+        
+        set new.create_at = CURRENT_TIMESTAMP;
+        set new.update_at = CURRENT_TIMESTAMP;
+
+end
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `tbu_provinces_update`;
+DELIMITER $$
+CREATE TRIGGER `tbu_provinces_update` BEFORE UPDATE ON `provinces` FOR EACH ROW begin
+        
+        set new.update_at = CURRENT_TIMESTAMP;
+
+end
+$$
+DELIMITER ;
+
 -- --------------------------------------------------------
 
 --
@@ -251,6 +448,29 @@ INSERT INTO `rates` (`idrate`, `type`, `pricexmin`, `costprice`, `origincity`, `
 (1, 'local', 10, 5, 1, 1, '2020-05-11 03:23:04', '2020-05-11 03:23:04'),
 (2, 'local', 12.5, 5, 1, 9, '2020-05-11 03:24:09', '2020-05-11 03:24:09');
 
+--
+-- Disparadores `rates`
+--
+DROP TRIGGER IF EXISTS `tbi_rates_create`;
+DELIMITER $$
+CREATE TRIGGER `tbi_rates_create` BEFORE INSERT ON `rates` FOR EACH ROW begin
+        
+        set new.create_at = CURRENT_TIMESTAMP;
+        set new.update_at = CURRENT_TIMESTAMP;
+
+end
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `tbu_rates_update`;
+DELIMITER $$
+CREATE TRIGGER `tbu_rates_update` BEFORE UPDATE ON `rates` FOR EACH ROW begin
+        
+        set new.update_at = CURRENT_TIMESTAMP;
+
+end
+$$
+DELIMITER ;
+
 -- --------------------------------------------------------
 
 --
@@ -261,28 +481,53 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user` varchar(50) NOT NULL,
-  `password` varchar(256) NOT NULL,
+  `password` varchar(50) NOT NULL,
   `name` varchar(50) NOT NULL,
   `lastname` varchar(50) NOT NULL,
   `dni` varchar(10) NOT NULL,
   `idcity` int(11) NOT NULL,
-  `usertype` enum('cliente','empleado') NOT NULL,
+  `usertype` enum('cliente','empleado') NOT NULL DEFAULT 'cliente',
   `create_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `update_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  `is_available` tinyint(1) NOT NULL DEFAULT '1',
+  `is_available` tinyint(1) DEFAULT '1',
   PRIMARY KEY (`id`),
   UNIQUE KEY `user` (`user`),
   UNIQUE KEY `dni` (`dni`),
   KEY `idcity` (`idcity`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 --
 -- Volcado de datos para la tabla `users`
 --
 
 INSERT INTO `users` (`id`, `user`, `password`, `name`, `lastname`, `dni`, `idcity`, `usertype`, `create_at`, `update_at`, `is_available`) VALUES
-(1, 'patricio', '123456', 'Patricio', 'Diaz', '3333333', 1, 'cliente', '2020-05-11 03:13:47', '2020-05-11 03:13:47', 1),
-(2, 'mariano', '123456', 'Mariano', 'Zanier', '2222222', 1, 'empleado', '2020-05-11 03:16:52', '2020-05-11 03:16:52', 1);
+(1, 'Patricio', '123456', 'Patricio', 'Diaz', '333333', 1, 'cliente', '2020-05-11 03:13:47', '2020-06-05 03:05:44', 1),
+(2, 'Mariano', '123456', 'Mariano', 'Zanier', '333222', 1, 'cliente', '2020-05-11 03:16:52', '2020-06-05 03:06:05', 1),
+(3, 'admin', '111111', 'admin', 'admin', '111111', 1, 'empleado', '2020-06-05 03:06:45', '2020-06-05 03:06:45', 1),
+(7, 'antena', '000000', 'an', 'tena', '000000', 1, 'empleado', '2020-06-07 03:50:26', '2020-06-07 03:50:26', 1);
+
+--
+-- Disparadores `users`
+--
+DROP TRIGGER IF EXISTS `tbi_users_create`;
+DELIMITER $$
+CREATE TRIGGER `tbi_users_create` BEFORE INSERT ON `users` FOR EACH ROW begin
+        
+        set new.create_at = CURRENT_TIMESTAMP;
+        set new.update_at = CURRENT_TIMESTAMP;
+
+end
+$$
+DELIMITER ;
+DROP TRIGGER IF EXISTS `tbu_users_update`;
+DELIMITER $$
+CREATE TRIGGER `tbu_users_update` BEFORE UPDATE ON `users` FOR EACH ROW begin
+        
+        set new.update_at = CURRENT_TIMESTAMP;
+
+end
+$$
+DELIMITER ;
 
 --
 -- Restricciones para tablas volcadas

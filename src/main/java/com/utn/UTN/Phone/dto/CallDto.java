@@ -1,6 +1,5 @@
 package com.utn.UTN.Phone.dto;
 
-import com.utn.UTN.Phone.model.Line;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import java.sql.Time;
+import java.sql.Timestamp;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,13 +18,15 @@ public class CallDto {
 
     private String destinationNumber;
 
-    private Time durationtime;
+    private Time duration;
 
-    //agregarv la fecha y hora
-    //private
+    private Timestamp  dateTime;
+
+
 
     /*○ Número de origen
-    **○ Número de destino
-    **○ Duración de la llamada
+    *○ Número de destino
+    *○ Duración de la llamada
+    *○ Fecha y hora de la llamada
     * */
 }

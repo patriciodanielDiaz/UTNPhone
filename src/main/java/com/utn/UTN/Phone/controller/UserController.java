@@ -1,9 +1,11 @@
 package com.utn.UTN.Phone.controller;
 
 import com.utn.UTN.Phone.dto.LoginDto;
+import com.utn.UTN.Phone.dto.UserDto;
 import com.utn.UTN.Phone.model.Call;
 import com.utn.UTN.Phone.model.Line;
 import com.utn.UTN.Phone.model.User;
+import com.utn.UTN.Phone.proyection.ProfileProyection;
 import com.utn.UTN.Phone.service.UserService;
 import com.utn.UTN.Phone.exceptions.*;
 import com.utn.UTN.Phone.session.SessionManager;
@@ -12,12 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/user")
@@ -31,12 +36,25 @@ public class UserController {
         this.sessionManager = sessionManager;
     }
 
-    //--------------------------------------------------------------------------------------------------
-    @PostMapping("/register")
-    public ResponseEntity createUser(@RequestBody @Valid User addUser) throws URISyntaxException, DuplicateUserName, DuplicateDNI {
+    //-----------------------------------------------------------------------------------------------------
+    @GetMapping("/")
+    private ResponseEntity<ProfileProyection> getProfile(@RequestHeader("Authorization") String sessionToken) throws PermissionDeniedException, UserNotExistException {
+
+        User currentUser = sessionManager.getCurrentUser(sessionToken);
+        if (currentUser == null) {
+            throw new PermissionDeniedException();
+        }
+        ProfileProyection profileProyection= userService.getProfile(currentUser.getId());
+        return (profileProyection!= null) ? ResponseEntity.ok(profileProyection) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    //----------------------------------------------------------------------------------------------------------------------
+    @PostMapping("/")
+    public ResponseEntity createUser(@RequestBody @Valid UserDto addUser) throws URISyntaxException, DuplicateUserName, DuplicateDNI, SQLException {
 
         ResponseEntity response;
         User user;
+
         user = userService.findByDni(addUser.getDni());
 
         if (user != null) {
@@ -47,15 +65,15 @@ public class UserController {
                 throw new DuplicateUserName();
             }
         }
-        userService.addUser(addUser);
-        response = ResponseEntity.created(new URI("/login")).build();
-        return response;
+        userService.addCommonUser(addUser); //agregar location
+        URI location= ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri();
+        return ResponseEntity.created(location).build();
     }
 
     //--------------------------------------------------------------------------------------------------
-    @PutMapping("/update")
+    @PutMapping("/")
     public ResponseEntity updateUser(@RequestHeader("Authorization") String sessionToken,
-                                     @RequestBody @Valid User userUpdate)
+                                     @RequestBody @Valid UserDto userDto)
                                      throws PermissionDeniedException {
 
         User currentUser = sessionManager.getCurrentUser(sessionToken);
@@ -63,24 +81,22 @@ public class UserController {
             throw new PermissionDeniedException();
         }
 
-        userService.updateUser(userUpdate, currentUser.getId());
-        return ResponseEntity.ok().build();
+        userService.updateCommonUser(userDto, currentUser.getId());
+        URI location= ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(currentUser.getId()).toUri();
+        return ResponseEntity.created(location).build();
     }
 
-    // ------------------no funciona cry cry -------------------------------------------------------------
-    @PostMapping("/remove")
+    // ----------------------------------------------------------------------------------------------------------
+    @DeleteMapping("/")
     public ResponseEntity removeUser(@RequestHeader("Authorization") String sessionToken,
                                      @RequestBody @Valid LoginDto userDto)
                                      throws PermissionDeniedException, InvalidLoginException {
 
 
-        User currentUser = sessionManager.getCurrentUser(sessionToken); //ERROR ,me lo trae lazy, no me deja entrar a los metodos
-        System.out.println(currentUser);
-
-        if (currentUser == null) {
-            throw new PermissionDeniedException();
-        } else if (userDto.getUsername() == currentUser.getUser() && userDto.getPassword() == currentUser.getPassword()) {
-            userService.removeUser(currentUser.getId());
+        User user = sessionManager.getCurrentUser(sessionToken);
+        if (user==null) throw new PermissionDeniedException();
+        else if (userDto.getPassword().equals(user.getPassword()) && userDto.getUsername().equals(user.getUser())) {
+            userService.removeUser(user.getId());
         } else {
             throw new InvalidLoginException();
         }

@@ -1,12 +1,15 @@
 package com.utn.UTN.Phone.controller;
 import com.utn.UTN.Phone.dto.CallDto;
+import com.utn.UTN.Phone.exceptions.LineNotExistsException;
 import com.utn.UTN.Phone.exceptions.PermissionDeniedException;
 import com.utn.UTN.Phone.exceptions.RecordNotExistsException;
 import com.utn.UTN.Phone.exceptions.UserNotExistException;
 import com.utn.UTN.Phone.model.Call;
+import com.utn.UTN.Phone.model.City;
 import com.utn.UTN.Phone.model.Line;
 import com.utn.UTN.Phone.model.User;
 import com.utn.UTN.Phone.service.CallService;
+import com.utn.UTN.Phone.service.CityService;
 import com.utn.UTN.Phone.service.LineService;
 import com.utn.UTN.Phone.service.UserService;
 import com.utn.UTN.Phone.session.SessionManager;
@@ -30,19 +33,19 @@ public class CallController{
     private CallService callService;
     private LineService lineService;
     private UserService userService;
+    private CityService cityService;
     private SessionManager sessionManager;
 
     @Autowired
-    public CallController (CallService callService,LineService lineService,SessionManager sessionManager,UserService userService){this.callService=callService;this.lineService=lineService;this.sessionManager=sessionManager;this.userService=userService;}
+    public CallController (CallService callService,LineService lineService,CityService cityService,SessionManager sessionManager,UserService userService){this.callService=callService;this.lineService=lineService;this.sessionManager=sessionManager;this.userService=userService;this.cityService=cityService;}
 
-    //----------------------commonUser-------------------------------------------------------------------------------------
 
     @GetMapping("/{lineNumber}/date") // ejemplo posman localhost:8080/api/call/223456786/date?from=2020-01-01&to=2020-06-01
     public ResponseEntity<List<Call>> getCallByUser(@RequestHeader("Authorization") String sessionToken,
                                                     @PathVariable("lineNumber") String lineNumber,
                                                     @RequestParam(value = "from", required = false) String dateFrom,
                                                     @RequestParam(value = "to", required = false) String dateTo)
-            throws UserNotExistException, ParseException, PermissionDeniedException, RecordNotExistsException {
+            throws UserNotExistException, ParseException, PermissionDeniedException, RecordNotExistsException, LineNotExistsException {
 
         User currentUser = getCurrentUser(sessionToken);
         Line line=lineService.getLineByNumber(lineNumber);
@@ -61,17 +64,17 @@ public class CallController{
 
     }
 
+    //falta la base que te traiga el top 10 de destinos
 
-    //------- antena que inserta llamadas ... falta probar y validaciones y el login  ---------------------------
+    @GetMapping("/{lineNumber}/destinations/") // ejemplo posman localhost:8080/api/call/5893239/Destinations/
+    public ResponseEntity<List<City>> getDestinationsTop(@RequestHeader("Authorization") String sessionToken,
+                                                    @PathVariable("lineNumber") String lineNumber) throws RecordNotExistsException {
 
-    @PostMapping("/entry")
-    public void addCall(@RequestBody @Valid CallDto callDto) throws RecordNotExistsException {
+        List<City> cities=cityService.getTopDestination(lineNumber);
 
-        Line origin=lineService.getLineByNumber(callDto.getOriginNumber());
-        Line destination=lineService.getLineByNumber(callDto.getDestinationNumber());
-
-        callService.addCall(origin,destination,callDto.getDurationtime());
+        return (cities.size() > 0) ? ResponseEntity.ok(cities) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
 
 
     //--------------------------------------------------------------------------------------------------------------

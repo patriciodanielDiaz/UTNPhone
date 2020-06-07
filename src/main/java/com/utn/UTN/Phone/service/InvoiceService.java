@@ -1,11 +1,17 @@
 package com.utn.UTN.Phone.service;
 
+import com.utn.UTN.Phone.exceptions.RecordNotExistsException;
+import com.utn.UTN.Phone.model.Call;
 import com.utn.UTN.Phone.model.Invoice;
+import com.utn.UTN.Phone.model.Line;
+import com.utn.UTN.Phone.proyection.InvoiceProyection;
 import com.utn.UTN.Phone.repository.InvoiceRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class InvoiceService {
@@ -17,14 +23,13 @@ public class InvoiceService {
         this.invoiceRepository = invoiceRepository;
     }
 
-
-
     //----------------------------------------------------------------------------
-    public void addInvoice(Invoice invoice) {
-        invoiceRepository.save(invoice);
-    }
 
-    public List<Invoice> getAll() {
-        return  invoiceRepository.findAll();
+    public List<Invoice> getInvoicesByDate(String lineNumber, Date fromDate, Date toDate) throws RecordNotExistsException {
+        List<Invoice> invoices = invoiceRepository.getInvoicesByDate(lineNumber,fromDate,toDate);
+        return Optional.ofNullable(invoices).orElseThrow(() -> new RecordNotExistsException());
     }
+    public List<Invoice> getInvoicesByNumber(String lineNumber)throws RecordNotExistsException {
+        List<Invoice> invoices = invoiceRepository.getInvoicesByNumber(lineNumber);
+        return Optional.ofNullable(invoices).orElseThrow(() -> new RecordNotExistsException());}
 }

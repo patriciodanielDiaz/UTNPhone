@@ -26,8 +26,8 @@ public class Province {
     @NotNull
     private String province;
 
-    @OneToMany(mappedBy = "province", fetch = FetchType.LAZY)
-    private List<City> cities;
+    /*@OneToMany(mappedBy = "province")
+    private List<City> cities;*/
 
     @Column(name = "create_at")
     private String createAt;

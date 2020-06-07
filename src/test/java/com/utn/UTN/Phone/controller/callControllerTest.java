@@ -22,7 +22,7 @@ public class callControllerTest {
     UserService userService;
     SessionManager sessionManager;
     CallController callController;
-
+/*
     @Before
     public void setUp() {
         userService = mock(UserService.class);
@@ -40,5 +40,5 @@ public class callControllerTest {
         ResponseEntity responseEntity = callController.getCallsmall();
 
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-    */}
+    }*/
 }

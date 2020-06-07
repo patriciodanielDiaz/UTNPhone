@@ -22,7 +22,7 @@ public class Line {
     private String linenumber;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idtype")
     @JsonBackReference(value="lineLineType")
     private LineType lineType;
@@ -32,7 +32,7 @@ public class Line {
     }
 
     @NotNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "iduser")
     @JsonBackReference(value="lineUser")
     private User user;

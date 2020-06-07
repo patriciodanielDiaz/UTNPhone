@@ -24,8 +24,8 @@ public class City {
     private Integer id;
 
     @NotNull
-    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "idprovince")
+    @ManyToOne(fetch = FetchType.EAGER)
     @JsonBackReference
     private Province province;
 
@@ -39,8 +39,8 @@ public class City {
     @NotNull
     private int prefix;
 
-    @OneToMany(mappedBy = "city")
-    private List<User> users;
+    /*@OneToMany(mappedBy = "city")
+    private List<User> users;*/
 
     @Column(name = "create_at")
     private String createAt;

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
 
 @RestControllerAdvice
@@ -44,5 +45,17 @@ import java.sql.SQLIntegrityConstraintViolationException;
         @ResponseStatus(HttpStatus.CONFLICT)
         @ExceptionHandler(DuplicateUserName.class)
         public ErrorDto handleDuplicateUserName() { return new ErrorDto(6, "Failing validation :duplicate UserName "); }
+
+       @ResponseStatus(HttpStatus.CONFLICT)
+       @ExceptionHandler(SQLException.class)
+       public ErrorDto handleSQLexception() { return new ErrorDto(7, "incomplete data"); }
+
+       @ResponseStatus(HttpStatus.BAD_REQUEST)
+       @ExceptionHandler(LineNotExistsException.class)
+       public ErrorDto handleLineNotExistsException(LineNotExistsException e) {return new ErrorDto(8,"line not exists"); }
+
+        @ResponseStatus(HttpStatus.BAD_REQUEST)
+        @ExceptionHandler(CityNotExistsException.class)
+        public ErrorDto handleCityNotExistsException(CityNotExistsException e) {return new ErrorDto(9,"city not exists"); }
 
 }
