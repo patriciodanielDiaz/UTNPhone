@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Entity
 @Table(name = "lines_users")
@@ -12,6 +13,15 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @Data
 @Builder
+@NamedStoredProcedureQuery(
+        name = "sp_create_line",
+        procedureName = "sp_create_line",
+        parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = Integer.class, name = "pIdUser"),
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = Integer.class, name = "pTypeLine"),
+                @StoredProcedureParameter(mode = ParameterMode.OUT, type = Integer.class, name = "pidLine")
+        }
+)
 public class Line {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,7 +56,10 @@ public class Line {
     private List<Rate> rateOrigin;
 
     @OneToMany(mappedBy = "destinationCity", fetch = FetchType.LAZY)
-    private List<Rate> rateDestination;*/
+    private List<Rate> rateDestination;
+    */
+    @OneToMany(mappedBy = "line")
+    private List<Invoice> invoices;
 
     @Column(name = "is_available")
     private Boolean isAvailable;

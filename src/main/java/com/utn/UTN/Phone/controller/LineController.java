@@ -41,9 +41,7 @@ public class LineController {
         return (lines.size() > 0) ? ResponseEntity.ok(lines) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-
-    //---------------------------------------------------------------------------------------------------------------
-    private User getCurrentUser(String sessionToken) throws UserNotExistException {
+     private User getCurrentUser(String sessionToken) throws UserNotExistException {
         return Optional.ofNullable(sessionManager.getCurrentUser(sessionToken)).orElseThrow(UserNotExistException::new);
     }
 }

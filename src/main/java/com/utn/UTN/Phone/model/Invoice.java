@@ -33,8 +33,18 @@ public class Invoice {
         return user.getId();
     }
 
-    @Column(name = "totalcalls")
-    private Integer totalcalls;
+    @NotNull
+    @JoinColumn(name = "idline")
+    @ManyToOne(fetch = FetchType.EAGER )
+    @JsonBackReference
+    private Line line;
+
+    public Integer getLineId(){
+        return line.getId();
+    }
+
+    @Column(name = "total_calls")
+    private Integer totalCalls;
 
     @Column(name = "total")
     private Float total;
@@ -42,8 +52,8 @@ public class Invoice {
     @Column(name = "cost")
     private Float cost;
 
-    @Column(name = "paymentdate")
-    private Date paymentDate;
+    @Column(name = "date_issued")
+    private Date dateIssued;
 
     @Column(name = "expiration")
     private Date expiration;

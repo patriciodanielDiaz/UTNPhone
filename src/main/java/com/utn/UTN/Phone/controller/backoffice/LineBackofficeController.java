@@ -3,8 +3,10 @@ package com.utn.UTN.Phone.controller.backoffice;
 import com.utn.UTN.Phone.dto.LoginDto;
 import com.utn.UTN.Phone.exceptions.*;
 import com.utn.UTN.Phone.model.Line;
+import com.utn.UTN.Phone.model.LineType;
 import com.utn.UTN.Phone.model.User;
 import com.utn.UTN.Phone.service.LineService;
+import com.utn.UTN.Phone.service.LineTypeService;
 import com.utn.UTN.Phone.service.UserService;
 import com.utn.UTN.Phone.session.SessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +25,14 @@ import java.util.Optional;
 public class LineBackofficeController {
     LineService lineService;
     UserService userService;
+    LineTypeService lineTypeService;
     SessionManager sessionManager;
 
     @Autowired
-    public LineBackofficeController(LineService lineService, UserService userService,SessionManager sessionManager) {
+    public LineBackofficeController(LineService lineService,LineTypeService lineTypeService, UserService userService,SessionManager sessionManager) {
         this.lineService = lineService;
         this.userService = userService;
+        this.lineTypeService=lineTypeService;
         this.sessionManager = sessionManager;
     }
     @GetMapping
@@ -44,14 +48,16 @@ public class LineBackofficeController {
         return (lines.size() > 0) ? ResponseEntity.ok(lines) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PostMapping
+    @PostMapping("/{dni}")
     public ResponseEntity <Line> createLine(@RequestHeader("Authorization") String sessionToken,
-                                            @RequestParam(value = "dni", required = true) String dni){
+                                            @PathVariable("dni") String dni,
+                                            @RequestParam(value = "lineType", required = true) String type) throws LineTypeNotExistsException {
         ResponseEntity responseEntity;
         User user= userService.findByDni(dni);
+        LineType linetype=lineTypeService.getByType(type);
         if(user!=null) {
-            String LineNumber = lineService.createLine(dni);
-            URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(LineNumber).toUri();
+            Integer idline = lineService.createLine(user.getId(),linetype.getId());
+            URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{idLine}").buildAndExpand(idline).toUri();
             responseEntity = ResponseEntity.created(location).build();
         }
         else {

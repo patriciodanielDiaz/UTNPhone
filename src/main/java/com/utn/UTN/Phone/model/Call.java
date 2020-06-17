@@ -61,9 +61,6 @@ public class Call {
 
     private Float price;
 
-    @Column(name = "costprice")
-    private Float costPrice;
-
     private Double total;
 
     @ManyToOne(fetch = FetchType.EAGER )

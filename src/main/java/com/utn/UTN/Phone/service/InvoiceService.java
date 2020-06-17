@@ -23,8 +23,6 @@ public class InvoiceService {
         this.invoiceRepository = invoiceRepository;
     }
 
-    //----------------------------------------------------------------------------
-
     public List<Invoice> getInvoicesByDate(String lineNumber, Date fromDate, Date toDate) throws RecordNotExistsException {
         List<Invoice> invoices = invoiceRepository.getInvoicesByDate(lineNumber,fromDate,toDate);
         return Optional.ofNullable(invoices).orElseThrow(() -> new RecordNotExistsException());

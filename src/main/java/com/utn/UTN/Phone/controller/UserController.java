@@ -36,7 +36,6 @@ public class UserController {
         this.sessionManager = sessionManager;
     }
 
-    //-----------------------------------------------------------------------------------------------------
     @GetMapping("/")
     private ResponseEntity<ProfileProyection> getProfile(@RequestHeader("Authorization") String sessionToken) throws PermissionDeniedException, UserNotExistException {
 
@@ -48,29 +47,6 @@ public class UserController {
         return (profileProyection!= null) ? ResponseEntity.ok(profileProyection) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    //----------------------------------------------------------------------------------------------------------------------
-    @PostMapping("/")
-    public ResponseEntity createUser(@RequestBody @Valid UserDto addUser) throws URISyntaxException, DuplicateUserName, DuplicateDNI, SQLException {
-
-        ResponseEntity response;
-        User user;
-
-        user = userService.findByDni(addUser.getDni());
-
-        if (user != null) {
-            throw new DuplicateDNI();
-        } else {
-            user = userService.findByUser(addUser.getUser());
-            if (user != null) {
-                throw new DuplicateUserName();
-            }
-        }
-        userService.addCommonUser(addUser); //agregar location
-        URI location= ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri();
-        return ResponseEntity.created(location).build();
-    }
-
-    //--------------------------------------------------------------------------------------------------
     @PutMapping("/")
     public ResponseEntity updateUser(@RequestHeader("Authorization") String sessionToken,
                                      @RequestBody @Valid UserDto userDto)
@@ -81,12 +57,11 @@ public class UserController {
             throw new PermissionDeniedException();
         }
 
-        userService.updateCommonUser(userDto, currentUser.getId());
-        URI location= ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(currentUser.getId()).toUri();
+        Integer idUser=userService.updateCommonUser(userDto, currentUser.getId());
+        URI location= ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(idUser).toUri();
         return ResponseEntity.created(location).build();
     }
 
-    // ----------------------------------------------------------------------------------------------------------
     @DeleteMapping("/")
     public ResponseEntity removeUser(@RequestHeader("Authorization") String sessionToken,
                                      @RequestBody @Valid LoginDto userDto)
@@ -102,5 +77,27 @@ public class UserController {
         }
         return ResponseEntity.ok().build();
     }
+    /*
+    @PostMapping("/")
+    public ResponseEntity createUser(@RequestBody @Valid UserDto addUser)
+            throws URISyntaxException, DuplicateUserName, DuplicateDNI, SQLException {
+
+        ResponseEntity response;
+        User user;
+
+        user = userService.findByDni(addUser.getDni());
+
+        if (user != null) {
+            throw new DuplicateDNI();
+        } else {
+            user = userService.findByUser(addUser.getUser());
+            if (user != null) {
+                throw new DuplicateUserName();
+            }
+        }
+        Integer iduser=userService.addCommonUser(addUser);
+        URI location= ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(iduser).toUri();
+        return ResponseEntity.created(location).build();
+    }*/
 
 }

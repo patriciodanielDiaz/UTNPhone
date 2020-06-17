@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
@@ -31,7 +32,7 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity login(@RequestBody LoginDto loginDto) throws ValidationException, UserNotExistException {
+    public ResponseEntity login(@RequestBody @Valid LoginDto loginDto) throws ValidationException, UserNotExistException {
 
         ResponseEntity response;
 

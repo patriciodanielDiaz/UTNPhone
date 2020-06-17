@@ -48,8 +48,8 @@ public class LineService {
         return Optional.ofNullable(lines).orElseThrow(() -> new RecordNotExistsException());
     }
 
-    public String createLine(String dni) {
-        return lineRepository.createLine(dni);
+    public Integer createLine(Integer idUser,Integer idType) {
+        return lineRepository.createLine(idUser,idType);
     }
 
     public Boolean deleteLine(String num) {return lineRepository.deleteLine(num);}

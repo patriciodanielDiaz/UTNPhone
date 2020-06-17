@@ -1,5 +1,4 @@
 package com.utn.UTN.Phone.controller;
-import com.utn.UTN.Phone.dto.CallDto;
 import com.utn.UTN.Phone.exceptions.LineNotExistsException;
 import com.utn.UTN.Phone.exceptions.PermissionDeniedException;
 import com.utn.UTN.Phone.exceptions.RecordNotExistsException;
@@ -8,6 +7,7 @@ import com.utn.UTN.Phone.model.Call;
 import com.utn.UTN.Phone.model.City;
 import com.utn.UTN.Phone.model.Line;
 import com.utn.UTN.Phone.model.User;
+import com.utn.UTN.Phone.dto.CityDto;
 import com.utn.UTN.Phone.service.CallService;
 import com.utn.UTN.Phone.service.CityService;
 import com.utn.UTN.Phone.service.LineService;
@@ -18,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -64,27 +63,21 @@ public class CallController{
 
     }
 
-    //falta la base que te traiga el top 10 de destinos
+    @GetMapping("/{lineNumber}/destinations/") // ejemplo posman localhost:8080/api/call/+54 (9) 223 154211100/Destinations/
+    public ResponseEntity<List<CityDto>> getDestinationsTop(@RequestHeader("Authorization") String sessionToken,
+                                                         @PathVariable("lineNumber") String lineNumber) throws RecordNotExistsException {
 
-    @GetMapping("/{lineNumber}/destinations/") // ejemplo posman localhost:8080/api/call/5893239/Destinations/
-    public ResponseEntity<List<City>> getDestinationsTop(@RequestHeader("Authorization") String sessionToken,
-                                                    @PathVariable("lineNumber") String lineNumber) throws RecordNotExistsException {
-
-        List<City> cities=cityService.getTopDestination(lineNumber);
-
+        List<CityDto> cities=cityService.getTopDestination(lineNumber);
         return (cities.size() > 0) ? ResponseEntity.ok(cities) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-
-
-    //--------------------------------------------------------------------------------------------------------------
     private User getCurrentUser(String sessionToken) throws UserNotExistException {
         return Optional.ofNullable(sessionManager.getCurrentUser(sessionToken)).orElseThrow(UserNotExistException::new);
     }
 
 
     //---------------Parcial German-------------------------------------------------------------------
-    @GetMapping("/parcial")
+    /*@GetMapping("/parcial")
     private ResponseEntity<User> getCallsmall(String sessionToken) throws PermissionDeniedException, RecordNotExistsException {
 
         User currentUser = sessionManager.getCurrentUser(sessionToken);
@@ -94,5 +87,5 @@ public class CallController{
         User user =userService.getUserByNum(call.getOriginCall().getLinenumber());
 
         return (user!= null) ? ResponseEntity.ok(user) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
+    }*/
 }

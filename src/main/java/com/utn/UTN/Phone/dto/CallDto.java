@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
 import java.sql.Time;
 import java.sql.Timestamp;
 
@@ -20,13 +19,16 @@ public class CallDto {
 
     private Time duration;
 
-    private Timestamp  dateTime;
+    private Timestamp dateTime;
 
 
 
-    /*○ Número de origen
-    *○ Número de destino
-    *○ Duración de la llamada
-    *○ Fecha y hora de la llamada
-    * */
+    /*post:localhost:8080/backoffice/call/entry/
+       {
+       "originNumber": "5893239",
+        "destinationNumber": "4841271",
+        "duration":"00:01:30",
+        "dateTime":"2020-06-04T16:23:04-03:00"
+       }
+    */
 }

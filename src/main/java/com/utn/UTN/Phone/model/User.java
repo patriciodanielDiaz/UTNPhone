@@ -15,6 +15,33 @@ import java.util.List;
 @Data
 @Builder
 @JsonIdentityInfo(generator= ObjectIdGenerators.PropertyGenerator.class, property="id")
+@NamedStoredProcedureQueries({
+@NamedStoredProcedureQuery(
+        name = "sp_insert_common_user",
+        procedureName = "sp_insert_common_user",
+        parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = String.class, name = "username"),
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = String.class, name = "pass"),
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = String.class, name = "firstname"),
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = String.class, name = "lastname"),
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = String.class, name = "dni"),
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = String.class, name = "city"),
+                @StoredProcedureParameter(mode = ParameterMode.OUT, type = Integer.class, name = "pid")
+        }),
+    @NamedStoredProcedureQuery(
+        name = "sp_update_common_user",
+        procedureName = "sp_update_common_user",
+        parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = String.class, name = "username"),
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = String.class, name = "pass"),
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = String.class, name = "firstname"),
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = String.class, name = "lastname"),
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = String.class, name = "dni"),
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = String.class, name = "city"),
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = Integer.class, name = "idUser"),
+                @StoredProcedureParameter(mode = ParameterMode.OUT, type = Integer.class, name = "pid")
+        })
+})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,6 +88,7 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private List<Invoice> invoices;
+
 */
     @Column(name = "is_available")
     private Boolean isAvailable;

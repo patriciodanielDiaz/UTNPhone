@@ -43,12 +43,12 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void addCommonUser(UserDto userDto) throws SQLException {
-        userRepository.addCommonUser(userDto.getUser(), userDto.getPassword(), userDto.getName(), userDto.getLastname(), userDto.getDni(), userDto.getCity());
+    public Integer addCommonUser(UserDto userDto) throws SQLException {
+       return userRepository.addCommonUser(userDto.getUser(), userDto.getPassword(), userDto.getName(), userDto.getLastname(), userDto.getDni(), userDto.getCity());
     }
 
-    public void updateCommonUser(UserDto userDto, Integer id) {
-        userRepository.updateCommonUser(userDto.getUser(), userDto.getPassword(), userDto.getName(), userDto.getLastname(), userDto.getDni(), userDto.getCity(), id);
+    public Integer updateCommonUser(UserDto userDto, Integer id) {
+        return userRepository.updateCommonUser(userDto.getUser(), userDto.getPassword(), userDto.getName(), userDto.getLastname(), userDto.getDni(), userDto.getCity(), id);
     }
 
     public List<User> getAll() throws UserNotExistException {
@@ -64,8 +64,10 @@ public class UserService {
         userRepository.deleteById(id);
     }
 
-    public User getById(Integer id) {
-        return userRepository.getById(id);
+    public Optional<User> getById(Integer id) throws UserNotExistException {
+        Optional<User> u= userRepository.findById(id);
+        return Optional.ofNullable(u).orElseThrow(() -> new UserNotExistException());
+
     }
 
     public ProfileProyection getProfile(Integer id) throws UserNotExistException {
@@ -74,8 +76,7 @@ public class UserService {
     }
 
     //-------------Parcial German------------------------------------------------------------------
-    public User getUserByNum(String lineNum) {
+    /*public User getUserByNum(String lineNum) {
         return userRepository.getUserByNum(lineNum);
-    }
-
+    }*/
 }

@@ -10,7 +10,6 @@ import java.util.List;
 
 public interface InvoiceRepository extends JpaRepository<Invoice,Integer> {
 
-
     @Query(value = "SELECT i.*" +
             "FROM invoices i \n" +
             "inner join calls c on i.idinvoice=c.idinvoice\n" +

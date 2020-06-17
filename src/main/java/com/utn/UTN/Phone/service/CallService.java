@@ -26,7 +26,7 @@ public class CallService {
         this.callRepository = callRepository;
     }
 
-    //-----------------------------------------------------------------------------------------------
+    //------------------------------------------------------------------------------------------------------------------
     public Integer addCall(Integer idOrigin, Integer idDest ,Time duration, Timestamp dateTime) { return callRepository.addcall(idOrigin,idDest,duration,dateTime);}
 
     public List<Call> getCallsByNumber(Line line) throws RecordNotExistsException {
@@ -38,6 +38,9 @@ public class CallService {
         List<Call> lines = callRepository.getCallsByDate(line.getId(), fromDate, toDate);
         return Optional.ofNullable(lines).orElseThrow(() -> new RecordNotExistsException());
     }
+
+
+
 
 
     //---------------Parcial German-------------------------------------------------------------------

@@ -48,10 +48,10 @@ public class InvoiceController {
         if ((dateFrom != null) && (dateTo != null)) {
             Date fromDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateFrom);
             Date toDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateTo);
-            invoices = invoiceService.getInvoicesByDate(line.getLinenumber(), fromDate, toDate); //crer proyecion
+            invoices = invoiceService.getInvoicesByDate(line.getLinenumber(), fromDate, toDate);
 
         } else {
-            invoices = invoiceService.getInvoicesByNumber(line.getLinenumber()); //crear proyeccion
+            invoices = invoiceService.getInvoicesByNumber(line.getLinenumber());
         }
 
         //no funciona tranferir a un dto, me repite los datos
@@ -81,7 +81,6 @@ public class InvoiceController {
 
     }
 
-    //--------------------------------------------------------------------------------------------------------------
     private User getCurrentUser(String sessionToken) throws UserNotExistException {
         return Optional.ofNullable(sessionManager.getCurrentUser(sessionToken)).orElseThrow(UserNotExistException::new);
     }

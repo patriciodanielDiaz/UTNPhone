@@ -48,7 +48,7 @@ public class CallBackofficeController {
             throws UserNotExistException, ParseException, RecordNotExistsException, LineNotExistsException {
 
         User user=userService.findByDni(dni);
-        Optional.ofNullable(user).orElseThrow(() -> new UserNotExistException());//no me queda otra porque necesito que el finByDni venga null en el login
+        Optional.ofNullable(user).orElseThrow(() -> new UserNotExistException());//no me queda otra porque necesito que el finByDni null en el login
 
         Line line=lineService.getLineByNumber(lineNumber);
 
@@ -66,13 +66,12 @@ public class CallBackofficeController {
 
     }
 
-
-
-
-    //------- antena que inserta llamadas ... falta probar  ---------------------------
+    //------------------------ antena que inserta llamadas ----------------------------------
 
     @PostMapping("/entry")
-    public ResponseEntity addCall(@RequestHeader("Authorization") String sessionToken, @RequestBody @Valid CallDto callDto) throws LineNotExistsException, PermissionDeniedException {
+    public ResponseEntity addCall(@RequestHeader("Authorization") String sessionToken,@Valid @RequestBody CallDto callDto) throws LineNotExistsException, PermissionDeniedException {
+
+        System.out.println(callDto.getDateTime());//probar la hora que entra
 
         ResponseEntity responseEntity;
         User antena= sessionManager.getCurrentUser(sessionToken);

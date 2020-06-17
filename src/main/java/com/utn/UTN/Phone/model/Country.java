@@ -1,7 +1,5 @@
 package com.utn.UTN.Phone.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -9,15 +7,14 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.List;
 
 @Entity
-@Table(name = "provinces")
+@Table(name = "countries")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
-public class Province {
+public class Country {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,25 +22,16 @@ public class Province {
     private Integer id;
 
     @NotNull
-    @JoinColumn(name = "idcountry")
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JsonBackReference
-    private Country country;
-
-    public String countryName(){
-        return country.getCountry();
-    }
+    private String country;
 
     @NotNull
-    private String province;
-
-    /*@OneToMany(mappedBy = "province")
-    private List<City> cities;*/
+    private String prefix;
 
     @Column(name = "create_at")
     private String createAt;
 
     @Column(name = "update_at")
     private String updateAt;
+
 
 }

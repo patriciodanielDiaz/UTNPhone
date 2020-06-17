@@ -16,13 +16,12 @@ import java.util.List;
 public interface CallRepository extends JpaRepository<Call,Integer> {
 
 
-    //--------------falta probar----------------------------------------------
     @Modifying
     @Transactional
     @Query(value = "INSERT INTO `calls`(`origincall`, `destinationcall`,`durationtime`,`create_at`) VALUES (?1,?2,?3,?4)",nativeQuery = true)
     Integer addcall(Integer originId, Integer destinationId, Time duration, Timestamp dateTime);
 
-    @Query(value = "Select * from calls where origincall = ?1",nativeQuery = true)
+    @Query(value = "SELECT * FROM calls WHERE origincall = ?1",nativeQuery = true)
     List<Call> getCallsByNumber(Integer idlineOrigin);
 
     @Query(value = "SELECT * FROM calls c WHERE c.origincall=?1 and c.create_at between ?2 and ?3", nativeQuery = true)

@@ -12,7 +12,9 @@ import org.springframework.data.repository.query.Param;
 import javax.persistence.NamedStoredProcedureQuery;
 import javax.persistence.ParameterMode;
 import javax.persistence.StoredProcedureParameter;
+import javax.persistence.StoredProcedureQuery;
 import javax.transaction.Transactional;
+import java.sql.SQLException;
 import java.util.List;
 
 public interface LineRepository extends JpaRepository<Line,Integer> {
@@ -30,21 +32,12 @@ public interface LineRepository extends JpaRepository<Line,Integer> {
             "where u.dni=?1",nativeQuery = true)
     List<Line> getLinesByUserDNI(String dni);
 
+    @Procedure ( name  =  "sp_create_line" )
+    Integer  createLine( @Param ( "pIdUser" ) Integer  pIdUser, @Param ( "pTypeLine" ) Integer  pTypeLine);
 
-    //---------------falta terminar la llamada------------------------------------------
-
-    @Transactional
-    @Query(value = "call sp_create_line(?1);", nativeQuery = true)
-    String createLine(String dni);
-
-    //----------------------------------------------------------------------------------
-
-
-    @Transactional
-    @Query(value = "call sp_delete_line(?1)", nativeQuery = true)
-    Boolean deleteLine(String pnumber);
+    //falta terminar
+    @Procedure ( name  = "sp_delete_line")
+    Boolean deleteLine(@Param ( "delete" ) String pnumber);
 
     //----------------------------------------------------------------------------------
-    /*@Query(value = "call sp_delete_line(?1,out);", nativeQuery = true)
-    Boolean deleteLine(String num);*/
 }

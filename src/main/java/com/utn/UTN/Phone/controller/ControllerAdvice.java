@@ -55,7 +55,12 @@ import java.sql.SQLIntegrityConstraintViolationException;
        public ErrorDto handleLineNotExistsException(LineNotExistsException e) {return new ErrorDto(8,"line not exists"); }
 
         @ResponseStatus(HttpStatus.BAD_REQUEST)
+        @ExceptionHandler(LineTypeNotExistsException.class)
+        public ErrorDto handleLineTypeNotExistsException(LineTypeNotExistsException e) {return new ErrorDto(9,"line Type not exists"); }
+
+
+        @ResponseStatus(HttpStatus.BAD_REQUEST)
         @ExceptionHandler(CityNotExistsException.class)
-        public ErrorDto handleCityNotExistsException(CityNotExistsException e) {return new ErrorDto(9,"city not exists"); }
+        public ErrorDto handleCityNotExistsException(CityNotExistsException e) {return new ErrorDto(10,"city not exists"); }
 
 }
