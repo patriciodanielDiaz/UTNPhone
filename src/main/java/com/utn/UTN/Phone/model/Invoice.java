@@ -36,7 +36,7 @@ public class Invoice {
     @NotNull
     @JoinColumn(name = "idline")
     @ManyToOne(fetch = FetchType.EAGER )
-    @JsonBackReference
+    @JsonBackReference(value="invoiceLine")
     private Line line;
 
     public Integer getLineId(){
@@ -63,6 +63,9 @@ public class Invoice {
 
     @Column(name = "create_at")
     private String createAt;
+
+    @Column(name = "date_index")
+    private Date dateIndex;
 
     @Column(name = "update_at")
     private String updateAt;

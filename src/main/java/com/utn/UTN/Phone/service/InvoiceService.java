@@ -27,7 +27,8 @@ public class InvoiceService {
         List<Invoice> invoices = invoiceRepository.getInvoicesByDate(lineNumber,fromDate,toDate);
         return Optional.ofNullable(invoices).orElseThrow(() -> new RecordNotExistsException());
     }
-    public List<Invoice> getInvoicesByNumber(String lineNumber)throws RecordNotExistsException {
-        List<Invoice> invoices = invoiceRepository.getInvoicesByNumber(lineNumber);
+
+    public List<Invoice> getInvoicesByLine(Line line) throws RecordNotExistsException {
+        List<Invoice> invoices = invoiceRepository.findAllByLine(line);
         return Optional.ofNullable(invoices).orElseThrow(() -> new RecordNotExistsException());}
 }

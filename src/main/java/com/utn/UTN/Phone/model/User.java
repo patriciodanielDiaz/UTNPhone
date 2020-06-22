@@ -2,6 +2,7 @@ package com.utn.UTN.Phone.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 import javax.persistence.*;
@@ -40,7 +41,13 @@ import java.util.List;
                 @StoredProcedureParameter(mode = ParameterMode.IN, type = String.class, name = "city"),
                 @StoredProcedureParameter(mode = ParameterMode.IN, type = Integer.class, name = "idUser"),
                 @StoredProcedureParameter(mode = ParameterMode.OUT, type = Integer.class, name = "pid")
-        })
+        }),
+        @NamedStoredProcedureQuery(
+                name = "sp_delete_user",
+                procedureName = "sp_delete_user",
+                parameters = {
+                        @StoredProcedureParameter(mode = ParameterMode.IN, type = Integer.class, name = "pIdUser"),
+                         })
 })
 public class User {
     @Id
@@ -82,14 +89,15 @@ public class User {
     public Integer getCityId(){
         return city.getId();
     }
-/*
-    @OneToMany(mappedBy = "user")
-    private List<Line> lines;
+    /*
+        @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
+        @JsonManagedReference(value="lineUser")
+        private List<Line> lines;
+        /*
+            @OneToMany(mappedBy = "user")
+            private List<Invoice> invoices;
 
-    @OneToMany(mappedBy = "user")
-    private List<Invoice> invoices;
-
-*/
+        */
     @Column(name = "is_available")
     private Boolean isAvailable;
 

@@ -1,6 +1,5 @@
-package com.utn.UTN.Phone.controller.backoffice;
+package com.utn.UTN.Phone.controller.backofficeController;
 
-import com.utn.UTN.Phone.dto.LoginDto;
 import com.utn.UTN.Phone.exceptions.*;
 import com.utn.UTN.Phone.model.Line;
 import com.utn.UTN.Phone.model.LineType;
@@ -15,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +39,6 @@ public class LineBackofficeController {
                                                     throws RecordNotExistsException{
 
         List<Line> lines =null;
-
         if(dni!=null) lines = lineService.getLinesByUserDNI(dni);
         else  lines = lineService.getAll();
 
@@ -51,9 +48,12 @@ public class LineBackofficeController {
     @PostMapping("/{dni}")
     public ResponseEntity <Line> createLine(@RequestHeader("Authorization") String sessionToken,
                                             @PathVariable("dni") String dni,
-                                            @RequestParam(value = "lineType", required = true) String type) throws LineTypeNotExistsException {
+                                            @RequestParam(value = "lineType", required = true) String type)
+                                            throws LineTypeNotExistsException, UserNotExistException{
+
         ResponseEntity responseEntity;
         User user= userService.findByDni(dni);
+        Optional.ofNullable(user).orElseThrow(() -> new UserNotExistException());
         LineType linetype=lineTypeService.getByType(type);
         if(user!=null) {
             Integer idline = lineService.createLine(user.getId(),linetype.getId());
@@ -66,17 +66,18 @@ public class LineBackofficeController {
         return responseEntity;
     }
 
-    @DeleteMapping
+    //solucionar :Request method 'DELETE' not supported
+    @DeleteMapping("/{dni}/{number}")
     public ResponseEntity disabledLine(@RequestHeader("Authorization") String sessionToken,
-                                       @RequestParam(value = "number",required = true) String num)
-                                        throws LineNotExistsException {
+                                       @PathVariable("dni") String dni,
+                                       @PathVariable("number") String number)
+                                        throws LineNotExistsException,UserNotExistException {
 
-        ResponseEntity responseEntity;
-        Line line=lineService.getLineByNumber(num);
-        Boolean delete= lineService.deleteLine(line.getLinenumber());
-        if(delete) responseEntity=ResponseEntity.ok().build();
-        else responseEntity=ResponseEntity.badRequest().build();
+        User user= userService.findByDni(dni);
+        Optional.ofNullable(user).orElseThrow(() -> new UserNotExistException());
+        Line line=lineService.getLineByNumber(number);
+        Integer id= lineService.disabledLine(line.getId());
 
-        return responseEntity;
+        return (id > 0) ? ResponseEntity.ok().build() : ResponseEntity.badRequest().build();
     }
 }

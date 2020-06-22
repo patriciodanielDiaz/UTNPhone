@@ -26,28 +26,22 @@ public class CallService {
         this.callRepository = callRepository;
     }
 
-    //------------------------------------------------------------------------------------------------------------------
-    public Integer addCall(Integer idOrigin, Integer idDest ,Time duration, Timestamp dateTime) { return callRepository.addcall(idOrigin,idDest,duration,dateTime);}
+    public Call addCall(Line origin,Line dest ,Time duration, Timestamp dateTime) {
+        Call call= new Call();
+        call.setOriginCall(origin);
+        call.setDestinationCall(dest);
+        call.setDurationtime(duration);
+        call.setCreateAt(dateTime);
+        return callRepository.save(call);}
 
-    public List<Call> getCallsByNumber(Line line) throws RecordNotExistsException {
-        List<Call> lines = callRepository.getCallsByNumber(line.getId());
+    public List<Call> getCallsByLine(Line line) throws RecordNotExistsException {
+        List<Call> lines = callRepository.findAllByOriginCall(line);
         return Optional.ofNullable(lines).orElseThrow(() -> new RecordNotExistsException());
     }
 
     public List<Call> getCallsByDate(Line line, Date fromDate, Date toDate) throws RecordNotExistsException {
         List<Call> lines = callRepository.getCallsByDate(line.getId(), fromDate, toDate);
         return Optional.ofNullable(lines).orElseThrow(() -> new RecordNotExistsException());
-    }
-
-
-
-
-
-    //---------------Parcial German-------------------------------------------------------------------
-
-    public Call getCallSmall() throws RecordNotExistsException {
-        Call call = callRepository.getCallSmall();
-        return Optional.ofNullable(call).orElseThrow(() -> new RecordNotExistsException());
     }
 
 }

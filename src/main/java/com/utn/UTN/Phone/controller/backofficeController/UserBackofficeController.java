@@ -1,12 +1,8 @@
-package com.utn.UTN.Phone.controller.backoffice;
+package com.utn.UTN.Phone.controller.backofficeController;
 
 import com.utn.UTN.Phone.dto.UserDto;
-import com.utn.UTN.Phone.exceptions.DuplicateDNI;
-import com.utn.UTN.Phone.exceptions.DuplicateUserName;
-import com.utn.UTN.Phone.exceptions.PermissionDeniedException;
-import com.utn.UTN.Phone.exceptions.UserNotExistException;
+import com.utn.UTN.Phone.exceptions.*;
 import com.utn.UTN.Phone.model.User;
-import com.utn.UTN.Phone.proyection.ProfileProyection;
 import com.utn.UTN.Phone.service.UserService;
 import com.utn.UTN.Phone.session.SessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +14,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 
 @RestController
 @RequestMapping("/backoffice/users")
@@ -36,7 +31,7 @@ public class UserBackofficeController {
 
     @PostMapping("/")
     public ResponseEntity createUser(@RequestBody @Valid User userAdd)
-            throws URISyntaxException, DuplicateUserName, DuplicateDNI {
+            throws DuplicateUserName, DuplicateDNI {
 
         User user=userService.findByDni(userAdd.getDni());
 
@@ -56,7 +51,7 @@ public class UserBackofficeController {
     }
     @PutMapping("/{dni}")
     public ResponseEntity UpdateUser(@RequestHeader("Authorization") String sessionToken,
-                                     @RequestBody @Valid User userAdd,
+                                     @RequestBody @Valid UserDto userDto,
                                      @PathVariable("dni") String dni)
             throws URISyntaxException{
 
@@ -64,14 +59,13 @@ public class UserBackofficeController {
         User user;
         user = userService.findByDni(dni);
         if(user!=null){
-            userService.updateUser(userAdd, user.getId());
-            URI location= ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri();
+            Integer idUser=userService.updateCommonUser(userDto, user.getId());
+            URI location= ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(idUser).toUri();
             return ResponseEntity.created(location).build();}
         else{
             return ResponseEntity.badRequest().build();
         }
     }
-
 
     @GetMapping("/{dni}")
     private ResponseEntity <User> getUser(@RequestHeader("Authorization") String sessionToken,
@@ -79,12 +73,25 @@ public class UserBackofficeController {
         User user = userService.findByDni(dni);
         return (user!= null) ? ResponseEntity.ok(user) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+    @DeleteMapping("/{dni}")
+    public ResponseEntity removeUser(@RequestHeader("Authorization") String sessionToken,
+                                     @PathVariable("dni") String dni)
+                                    throws UserNotExistException {
 
-    @GetMapping("/")
+        User user = userService.findByDni(dni);
+
+        if ((user != null)) {
+            userService.removeUser(user.getId());
+        } else {
+            throw new UserNotExistException();
+        }
+        return ResponseEntity.ok().build();
+    }
+
+    /*@GetMapping("/")
     private ResponseEntity <List<User>> getAllUser(@RequestHeader("Authorization") String sessionToken) throws UserNotExistException {
 
         List<User> list= userService.getAll();
         return (list!= null) ? ResponseEntity.ok(list) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
+    }*/
 }

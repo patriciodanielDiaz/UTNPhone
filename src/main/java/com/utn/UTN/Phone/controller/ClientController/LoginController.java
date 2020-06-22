@@ -1,4 +1,4 @@
-package com.utn.UTN.Phone.controller;
+package com.utn.UTN.Phone.controller.ClientController;
 
 import com.utn.UTN.Phone.dto.LoginDto;
 import com.utn.UTN.Phone.exceptions.*;
@@ -10,13 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.Objects;
 
 @RestController
 @RequestMapping("/")
@@ -31,28 +25,36 @@ public class LoginController {
         this.sessionManager = sessionManager;
     }
 
+    /*@ApiOperation(value= "user login")
+    @ApiResponses(value={
+            @ApiResponse(code =200, message = "successful login"),
+            @ApiResponse(code =400, message = "incomplete data"),
+            @ApiResponse(code =400, message = "User not exists")
+    })*/
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid LoginDto loginDto) throws ValidationException, UserNotExistException {
 
-        ResponseEntity response;
 
         if(loginDto.getPassword()==null||loginDto.getUsername()==null){
             throw new ValidationException();
         }
         User u = userService.login(loginDto.getUsername(), loginDto.getPassword());
         String token = sessionManager.createSession(u);
-        response = ResponseEntity.ok().headers(createHeaders(token)).build();
 
-        return response;
+        return ResponseEntity.ok().headers(createHeaders(token)).build();
     }
 
+    /*@ApiOperation(value= "user login")
+    @ApiResponses(value={
+            @ApiResponse(code =200, message = "successful login")
+    })*/
     @PostMapping("/logout")
     public ResponseEntity logout(@RequestHeader("Authorization") String token) {
         sessionManager.removeSession(token);
         return ResponseEntity.ok().build();
     }
 
-    private HttpHeaders createHeaders(String token) {
+    public HttpHeaders createHeaders(String token) {
         HttpHeaders responseHeaders = new HttpHeaders();
         responseHeaders.set("Authorization", token);
         return responseHeaders;

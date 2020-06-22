@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +23,6 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    //----------------------------------------------------------------------------
 
     public User login(String username, String password) throws UserNotExistException {
         User u = userRepository.login(username, password);
@@ -43,10 +41,6 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public Integer addCommonUser(UserDto userDto) throws SQLException {
-       return userRepository.addCommonUser(userDto.getUser(), userDto.getPassword(), userDto.getName(), userDto.getLastname(), userDto.getDni(), userDto.getCity());
-    }
-
     public Integer updateCommonUser(UserDto userDto, Integer id) {
         return userRepository.updateCommonUser(userDto.getUser(), userDto.getPassword(), userDto.getName(), userDto.getLastname(), userDto.getDni(), userDto.getCity(), id);
     }
@@ -56,27 +50,23 @@ public class UserService {
         return Optional.ofNullable(list).orElseThrow(() -> new UserNotExistException());
     }
 
-    public void updateUser(User userUpdate, Integer id) {
-        userRepository.updateUser(userUpdate.getUser(), userUpdate.getPassword(), userUpdate.getName(), userUpdate.getLastname(), userUpdate.getDni(), userUpdate.getCity().getId(), id);
-    }
-
     public void removeUser(Integer id) {
-        userRepository.deleteById(id);
+        userRepository.removeById(id);
     }
 
-    public Optional<User> getById(Integer id) throws UserNotExistException {
-        Optional<User> u= userRepository.findById(id);
-        return Optional.ofNullable(u).orElseThrow(() -> new UserNotExistException());
-
-    }
 
     public ProfileProyection getProfile(Integer id) throws UserNotExistException {
         ProfileProyection u = userRepository.getProfile(id);
         return Optional.ofNullable(u).orElseThrow(() -> new UserNotExistException());
     }
+ /*
+    public Optional<User> getById(Integer id) throws UserNotExistException {
+        Optional<User> u= userRepository.findById(id);
+        return Optional.ofNullable(u).orElseThrow(() -> new UserNotExistException());
 
-    //-------------Parcial German------------------------------------------------------------------
-    /*public User getUserByNum(String lineNum) {
-        return userRepository.getUserByNum(lineNum);
+    }
+   public Integer addCommonUser(UserDto userDto) throws SQLException {
+        return userRepository.addCommonUser(userDto.getUser(), userDto.getPassword(), userDto.getName(), userDto.getLastname(), userDto.getDni(), userDto.getCity());
     }*/
+
 }

@@ -1,4 +1,4 @@
-package com.utn.UTN.Phone.controller.backoffice;
+package com.utn.UTN.Phone.controller.backofficeController;
 
 import com.utn.UTN.Phone.exceptions.*;
 import com.utn.UTN.Phone.model.*;
@@ -11,10 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -34,19 +30,20 @@ public class RateBackofficeController {
     }
 
     @GetMapping //  posman localhost:8080/backoffice/rate
-    public ResponseEntity<List<Rate>> getRate(@RequestHeader("Authorization") String sessionToken) {
+    public ResponseEntity<List<Rate>> getRate(@RequestHeader("Authorization") String sessionToken) throws RecordNotExistsException {
 
         List<Rate> rates = rateService.getAll();
+
         return  (rates.size() > 0) ? ResponseEntity.ok(rates) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 
     }
 
     @GetMapping("/{city}/") //  posman localhost:8080/backoffice/rate/Mar Del Plata/
     public ResponseEntity<List<Rate>> getRate(@RequestHeader("Authorization") String sessionToken,
-                                                 @PathVariable("city") String city) throws CityNotExistsException {
+                                                 @PathVariable("city") String city) throws CityNotExistsException, RecordNotExistsException {
 
-        //City c=cityService.getCityByName(city);
-        List<Rate> rates = rateService.getByCity(city);
+        City c=cityService.getCityByName(city);
+        List<Rate> rates = rateService.getByCity(c);
         return  (rates.size() > 0) ? ResponseEntity.ok(rates) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 
     }

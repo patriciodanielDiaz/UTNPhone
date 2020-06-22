@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 @Data
 @Builder
+@NamedStoredProcedureQueries({
 @NamedStoredProcedureQuery(
         name = "sp_create_line",
         procedureName = "sp_create_line",
@@ -20,8 +21,15 @@ import java.util.List;
                 @StoredProcedureParameter(mode = ParameterMode.IN, type = Integer.class, name = "pIdUser"),
                 @StoredProcedureParameter(mode = ParameterMode.IN, type = Integer.class, name = "pTypeLine"),
                 @StoredProcedureParameter(mode = ParameterMode.OUT, type = Integer.class, name = "pidLine")
-        }
-)
+        }),
+@NamedStoredProcedureQuery(
+        name = "sp_delete_line",
+        procedureName = "sp_delete_line",
+        parameters = {
+                @StoredProcedureParameter(mode = ParameterMode.IN, type = Integer.class, name = "pIdLine"),
+                @StoredProcedureParameter(mode = ParameterMode.OUT, type = Integer.class, name = "pIdRemove")
+        })
+})
 public class Line {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,10 +65,10 @@ public class Line {
 
     @OneToMany(mappedBy = "destinationCity", fetch = FetchType.LAZY)
     private List<Rate> rateDestination;
-    */
+
     @OneToMany(mappedBy = "line")
     private List<Invoice> invoices;
-
+ */
     @Column(name = "is_available")
     private Boolean isAvailable;
 

@@ -8,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.Date;
 
 @Entity
 @Table(name = "calls")
@@ -74,9 +76,12 @@ public class Call {
     private Rate rate;
 
     @Column(name = "create_at")
-    private String createAt;
+    private Timestamp createAt;
+
+    @Column(name = "date_index")
+    private Date dateIndex;
 
     @Column(name = "update_at")
-    private String updateAt;
+    private Timestamp updateAt;
 
 }

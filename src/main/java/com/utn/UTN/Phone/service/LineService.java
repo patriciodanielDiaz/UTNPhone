@@ -1,16 +1,12 @@
 package com.utn.UTN.Phone.service;
 
-import com.utn.UTN.Phone.dto.LineDto;
 import com.utn.UTN.Phone.exceptions.LineNotExistsException;
-import com.utn.UTN.Phone.exceptions.NoDataFound;
 import com.utn.UTN.Phone.exceptions.RecordNotExistsException;
 import com.utn.UTN.Phone.model.Line;
-import com.utn.UTN.Phone.proyection.LineProyection;
+import com.utn.UTN.Phone.model.User;
 import com.utn.UTN.Phone.repository.LineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,21 +22,13 @@ public class LineService {
     }
 
 
-    public void addLine(Line line) { lineRepository.save(line);}
-
     public List<Line> getAll() throws RecordNotExistsException {
         List<Line> lines = lineRepository.findAll();
         return Optional.ofNullable(lines).orElseThrow(() -> new RecordNotExistsException());
     }
 
-    @Transactional(readOnly = true, propagation = Propagation.REQUIRED)
-    public List<Line> getLinesByUser(Integer id) throws RecordNotExistsException {
-        List<Line> lines = lineRepository.getLinesByUser(id);
-        return Optional.ofNullable(lines).orElseThrow(() -> new RecordNotExistsException());
-    }
-
     public Line getLineByNumber(String num) throws LineNotExistsException {
-        Line line = lineRepository.getLineByNumber(num);
+        Line line = lineRepository.findByLinenumber(num);
         return Optional.ofNullable(line).orElseThrow(() -> new LineNotExistsException());
     }
     public List<Line> getLinesByUserDNI(String dni) throws RecordNotExistsException {
@@ -48,9 +36,17 @@ public class LineService {
         return Optional.ofNullable(lines).orElseThrow(() -> new RecordNotExistsException());
     }
 
+    public List<Line> getLinesByUser(User user) throws RecordNotExistsException {
+        List<Line> lines = lineRepository.findAllByUser(user);
+        return Optional.ofNullable(lines).orElseThrow(() -> new RecordNotExistsException());
+    }
+
     public Integer createLine(Integer idUser,Integer idType) {
         return lineRepository.createLine(idUser,idType);
     }
 
-    public Boolean deleteLine(String num) {return lineRepository.deleteLine(num);}
+    public Integer disabledLine(Integer id) {
+        return lineRepository.disabledLine(id);
+    }
+
 }

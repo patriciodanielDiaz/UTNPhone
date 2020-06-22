@@ -1,31 +1,23 @@
-package com.utn.UTN.Phone.controller;
+package com.utn.UTN.Phone.controller.ClientController;
 
 import com.utn.UTN.Phone.dto.LoginDto;
 import com.utn.UTN.Phone.dto.UserDto;
-import com.utn.UTN.Phone.model.Call;
-import com.utn.UTN.Phone.model.Line;
 import com.utn.UTN.Phone.model.User;
 import com.utn.UTN.Phone.proyection.ProfileProyection;
 import com.utn.UTN.Phone.service.UserService;
 import com.utn.UTN.Phone.exceptions.*;
 import com.utn.UTN.Phone.session.SessionManager;
-import netscape.security.ForbiddenTargetException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/user")
+@RequestMapping("api/user")
 public class UserController {
     UserService userService;
     SessionManager sessionManager;
@@ -66,7 +58,6 @@ public class UserController {
     public ResponseEntity removeUser(@RequestHeader("Authorization") String sessionToken,
                                      @RequestBody @Valid LoginDto userDto)
                                      throws PermissionDeniedException, InvalidLoginException {
-
 
         User user = sessionManager.getCurrentUser(sessionToken);
         if (user==null) throw new PermissionDeniedException();

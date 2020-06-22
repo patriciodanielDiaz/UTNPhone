@@ -19,8 +19,6 @@ public interface CityRepository extends JpaRepository<City,Integer> {
             "    limit 10;", nativeQuery = true)
     List<City> getDestinationTop(String lineNumber);
 
-    /*
-    @Query(value = "SELECT * FROM cities WHERE cities.city=?1",nativeQuery = true)
-    City getCityByName(String c);*/
+    City findByCity(String city);
 
 }

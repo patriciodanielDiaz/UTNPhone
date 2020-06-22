@@ -1,5 +1,6 @@
-package com.utn.UTN.Phone.controller.backoffice;
+package com.utn.UTN.Phone.controller.backofficeController;
 
+import com.utn.UTN.Phone.dto.InvoiceDto;
 import com.utn.UTN.Phone.exceptions.LineNotExistsException;
 import com.utn.UTN.Phone.exceptions.PermissionDeniedException;
 import com.utn.UTN.Phone.exceptions.RecordNotExistsException;
@@ -35,33 +36,30 @@ public class InvoiceBackofficeController {
     @Autowired
     public InvoiceBackofficeController (InvoiceService invoiceService,LineService lineService,SessionManager sessionManager,UserService userService){this.invoiceService=invoiceService;this.lineService=lineService;this.sessionManager=sessionManager;this.userService=userService;}
 
-    @GetMapping("/{dni}/{lineNumer}/date") ////localhost:8080/backoffice/invoice/333333/5893239/date?from=2020-01-01&to=2020-06-12
-    public ResponseEntity<List<Invoice>> getInvoiceByUser(@RequestHeader("Authorization") String sessionToken,
+    @GetMapping("/{dni}/{lineNumer}/date") //localhost:8080/backoffice/invoice/333222//+54 (9) 223 154211100/date?from=2020-01-01&to=2020-06-12
+    public ResponseEntity<List<InvoiceDto>> getInvoiceByUser(@RequestHeader("Authorization") String sessionToken,
                                                           @PathVariable("dni") String dni,
                                                           @PathVariable("lineNumer") String lineNumber,
-                                                          @RequestParam(value = "from", required = false) String dateFrom,
-                                                          @RequestParam(value = "to", required = false) String dateTo)
+                                                          @RequestParam(value = "from", required = false) String from,
+                                                          @RequestParam(value = "to", required = false) String to)
             throws UserNotExistException, ParseException, PermissionDeniedException, RecordNotExistsException, LineNotExistsException {
 
         User user=userService.findByDni(dni);
 
         List<Invoice> invoices = new ArrayList<>();
-        Optional.ofNullable(user).orElseThrow(() -> new UserNotExistException());//no me queda otra porque necesito que el finByDni venga null en el login
-
+        Optional.ofNullable(user).orElseThrow(() -> new UserNotExistException());
         Line line=lineService.getLineByNumber(lineNumber);
 
-        if ((dateFrom != null) && (dateTo != null)) {
-            Date fromDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateFrom);
-            Date toDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateTo);
-            invoices = invoiceService.getInvoicesByDate(line.getLinenumber(), fromDate, toDate); //crer proyecion
+        if ((from != null) && (to != null)) {
+            Date fromDate = new SimpleDateFormat("yyyy-MM-dd").parse(from);
+            Date toDate = new SimpleDateFormat("yyyy-MM-dd").parse(to);
+            invoices = invoiceService.getInvoicesByDate(line.getLinenumber(), fromDate, toDate);
 
         } else {
-            invoices = invoiceService.getInvoicesByNumber(line.getLinenumber()); //crear proyeccion
+            invoices = invoiceService.getInvoicesByLine(line);
         }
 
-        return  (invoices.size() > 0) ? ResponseEntity.ok(invoices) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-
+        return  (invoices.size() > 0) ? ResponseEntity.ok(InvoiceDto.transferToInvoicesDto(invoices)) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
 
 }

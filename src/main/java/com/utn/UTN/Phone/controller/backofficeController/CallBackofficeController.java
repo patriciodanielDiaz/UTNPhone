@@ -1,4 +1,4 @@
-package com.utn.UTN.Phone.controller.backoffice;
+package com.utn.UTN.Phone.controller.backofficeController;
 
 import com.utn.UTN.Phone.dto.CallDto;
 import com.utn.UTN.Phone.exceptions.*;
@@ -60,7 +60,7 @@ public class CallBackofficeController {
             calls = callService.getCallsByDate(line, fromDate, toDate);
 
         } else {
-            calls = callService.getCallsByNumber(line);
+            calls = callService.getCallsByLine(line);
         }
         return (calls.size() > 0) ? ResponseEntity.ok(calls) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 
@@ -68,20 +68,18 @@ public class CallBackofficeController {
 
     //------------------------ antena que inserta llamadas ----------------------------------
 
-    @PostMapping("/entry")
-    public ResponseEntity addCall(@RequestHeader("Authorization") String sessionToken,@Valid @RequestBody CallDto callDto) throws LineNotExistsException, PermissionDeniedException {
-
-        System.out.println(callDto.getDateTime());//probar la hora que entra
+    @PostMapping("/entry")//localhost:8080/backoffice/call/entry/
+    public ResponseEntity addCall(@RequestHeader("Authorization") String sessionToken,@Valid @RequestBody CallDto callDto) throws LineNotExistsException, PermissionDeniedException, ParseException {
 
         ResponseEntity responseEntity;
         User antena= sessionManager.getCurrentUser(sessionToken);
-        if (antena.getUser().equals("antena") && antena.getPassword().equals("000000")) {
+        if (antena.getUser().equals("antenna") && antena.getPassword().equals("000000")) {
 
             Line origin=lineService.getLineByNumber(callDto.getOriginNumber());
             Line destination=lineService.getLineByNumber(callDto.getDestinationNumber());
-            Integer idcall = callService.addCall(origin.getId(),destination.getId(),callDto.getDuration(),callDto.getDateTime());
+            Call call = callService.addCall(origin,destination,callDto.getDuration(),callDto.getDateTime());
 
-            URI location= ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand("id").toUri();
+            URI location= ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(call.getId()).toUri();
             responseEntity =ResponseEntity.created(location).build();
         } else {
             responseEntity = ResponseEntity.status(HttpStatus.FORBIDDEN).build();

@@ -1,4 +1,5 @@
-package com.utn.UTN.Phone.controller;
+package com.utn.UTN.Phone.controller.ClientController;
+import com.utn.UTN.Phone.dto.CallDto;
 import com.utn.UTN.Phone.exceptions.LineNotExistsException;
 import com.utn.UTN.Phone.exceptions.PermissionDeniedException;
 import com.utn.UTN.Phone.exceptions.RecordNotExistsException;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -39,17 +39,17 @@ public class CallController{
     public CallController (CallService callService,LineService lineService,CityService cityService,SessionManager sessionManager,UserService userService){this.callService=callService;this.lineService=lineService;this.sessionManager=sessionManager;this.userService=userService;this.cityService=cityService;}
 
 
-    @GetMapping("/{lineNumber}/date") // ejemplo posman localhost:8080/api/call/223456786/date?from=2020-01-01&to=2020-06-01
-    public ResponseEntity<List<Call>> getCallByUser(@RequestHeader("Authorization") String sessionToken,
+    @GetMapping("/{lineNumber}/date") //localhost:8080/api/call/+54 (9) 223 154211100/date?from=2020-01-01&to=2020-06-01
+    public ResponseEntity<List<CallDto>> getCallByUser(@RequestHeader("Authorization") String sessionToken,
                                                     @PathVariable("lineNumber") String lineNumber,
                                                     @RequestParam(value = "from", required = false) String dateFrom,
                                                     @RequestParam(value = "to", required = false) String dateTo)
-            throws UserNotExistException, ParseException, PermissionDeniedException, RecordNotExistsException, LineNotExistsException {
+                                                    throws UserNotExistException, ParseException, PermissionDeniedException, RecordNotExistsException, LineNotExistsException {
 
         User currentUser = getCurrentUser(sessionToken);
         Line line=lineService.getLineByNumber(lineNumber);
         if(!currentUser.getId().equals(line.getUserId())) throw new PermissionDeniedException();
-        List<Call> calls = new ArrayList<>();
+        List<Call> calls ;
 
         if ((dateFrom != null) && (dateTo != null)) {
             Date fromDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateFrom);
@@ -57,35 +57,22 @@ public class CallController{
             calls = callService.getCallsByDate(line, fromDate, toDate);
 
         } else {
-            calls = callService.getCallsByNumber(line);
+            calls = callService.getCallsByLine(line);
         }
-        return (calls.size() > 0) ? ResponseEntity.ok(calls) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return (calls.size() > 0) ? ResponseEntity.ok(CallDto.transferToCallDto(calls)) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 
     }
 
-    @GetMapping("/{lineNumber}/destinations/") // ejemplo posman localhost:8080/api/call/+54 (9) 223 154211100/Destinations/
+    @GetMapping("/{lineNumber}/destinations/") //localhost:8080/api/call/+54 (9) 223 154211100/Destinations/
     public ResponseEntity<List<CityDto>> getDestinationsTop(@RequestHeader("Authorization") String sessionToken,
                                                          @PathVariable("lineNumber") String lineNumber) throws RecordNotExistsException {
 
-        List<CityDto> cities=cityService.getTopDestination(lineNumber);
-        return (cities.size() > 0) ? ResponseEntity.ok(cities) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        List<City> cities=cityService.getTopDestination(lineNumber);
+        return (cities.size() > 0) ? ResponseEntity.ok(CityDto.transferToCityDto(cities)) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     private User getCurrentUser(String sessionToken) throws UserNotExistException {
         return Optional.ofNullable(sessionManager.getCurrentUser(sessionToken)).orElseThrow(UserNotExistException::new);
     }
 
-
-    //---------------Parcial German-------------------------------------------------------------------
-    /*@GetMapping("/parcial")
-    private ResponseEntity<User> getCallsmall(String sessionToken) throws PermissionDeniedException, RecordNotExistsException {
-
-        User currentUser = sessionManager.getCurrentUser(sessionToken);
-        if(currentUser.getUserType()!= User.Type.empleado) throw new PermissionDeniedException();
-
-        Call call=callService.getCallSmall();
-        User user =userService.getUserByNum(call.getOriginCall().getLinenumber());
-
-        return (user!= null) ? ResponseEntity.ok(user) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }*/
 }

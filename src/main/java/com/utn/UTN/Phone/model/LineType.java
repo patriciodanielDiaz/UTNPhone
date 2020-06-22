@@ -24,10 +24,10 @@ public class LineType {
 
     @NotNull
     private String type;
-
+/*
     @OneToMany(mappedBy = "lineType")
     private List<Line> lines;
-
+*/
     @Column(name = "create_at")
     private String createAt;
 

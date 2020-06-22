@@ -1,20 +1,13 @@
-package com.utn.UTN.Phone.controller;
+package controller.controller.ClientController;
 
-import com.utn.UTN.Phone.dto.LoginDto;
-import com.utn.UTN.Phone.model.User;
+import com.utn.UTN.Phone.controller.ClientController.CallController;
 import com.utn.UTN.Phone.service.CallService;
 import com.utn.UTN.Phone.service.LineService;
 import com.utn.UTN.Phone.service.UserService;
 import com.utn.UTN.Phone.session.SessionManager;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 
-import static com.utn.UTN.Phone.model.User.Type.empleado;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class callControllerTest {
     CallService callService;
