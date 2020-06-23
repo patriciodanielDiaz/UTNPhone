@@ -1,4 +1,4 @@
-package com.utn.UTN.Phone.controller.ClientController;
+package com.utn.UTN.Phone.controller.clientController;
 
 import com.utn.UTN.Phone.dto.LoginDto;
 import com.utn.UTN.Phone.dto.UserDto;

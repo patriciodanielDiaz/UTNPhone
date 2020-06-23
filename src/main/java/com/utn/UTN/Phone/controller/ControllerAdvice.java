@@ -29,7 +29,7 @@ import java.sql.SQLException;
             return new ErrorDto(2,"incomplete data");
         }
 
-        @ResponseStatus(HttpStatus.BAD_REQUEST)
+        @ResponseStatus(HttpStatus.UNAUTHORIZED)
         @ExceptionHandler(UserNotExistException.class)
         public ErrorDto handleUserNotExists() { return new ErrorDto(3, "User not exists"); }
 

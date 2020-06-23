@@ -1,5 +1,5 @@
-package controller.controller.ClientController;
-import com.utn.UTN.Phone.controller.ClientController.LoginController;
+package com.utn.UTN.Phone.controller.clientController;
+import com.utn.UTN.Phone.controller.clientController.LoginController;
 import com.utn.UTN.Phone.dto.LoginDto;
 import com.utn.UTN.Phone.exceptions.UserNotExistException;
 import com.utn.UTN.Phone.exceptions.ValidationException;

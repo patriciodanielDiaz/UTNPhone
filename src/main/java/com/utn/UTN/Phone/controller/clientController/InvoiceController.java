@@ -1,4 +1,4 @@
-package com.utn.UTN.Phone.controller.ClientController;
+package com.utn.UTN.Phone.controller.clientController;
 
 import com.utn.UTN.Phone.dto.InvoiceDto;
 import com.utn.UTN.Phone.exceptions.LineNotExistsException;

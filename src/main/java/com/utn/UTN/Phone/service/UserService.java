@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -45,21 +44,20 @@ public class UserService {
         return userRepository.updateCommonUser(userDto.getUser(), userDto.getPassword(), userDto.getName(), userDto.getLastname(), userDto.getDni(), userDto.getCity(), id);
     }
 
-    public List<User> getAll() throws UserNotExistException {
-        List<User> list = userRepository.findAll();
-        return Optional.ofNullable(list).orElseThrow(() -> new UserNotExistException());
-    }
-
     public void removeUser(Integer id) {
         userRepository.removeById(id);
     }
-
 
     public ProfileProyection getProfile(Integer id) throws UserNotExistException {
         ProfileProyection u = userRepository.getProfile(id);
         return Optional.ofNullable(u).orElseThrow(() -> new UserNotExistException());
     }
- /*
+
+    /* public List<User> getAll() throws UserNotExistException {
+        List<User> list = userRepository.findAll();
+        return Optional.ofNullable(list).orElseThrow(() -> new UserNotExistException());
+    }
+
     public Optional<User> getById(Integer id) throws UserNotExistException {
         Optional<User> u= userRepository.findById(id);
         return Optional.ofNullable(u).orElseThrow(() -> new UserNotExistException());
@@ -68,5 +66,4 @@ public class UserService {
    public Integer addCommonUser(UserDto userDto) throws SQLException {
         return userRepository.addCommonUser(userDto.getUser(), userDto.getPassword(), userDto.getName(), userDto.getLastname(), userDto.getDni(), userDto.getCity());
     }*/
-
 }

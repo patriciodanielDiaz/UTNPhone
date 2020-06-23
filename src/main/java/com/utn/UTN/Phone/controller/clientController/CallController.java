@@ -1,4 +1,4 @@
-package com.utn.UTN.Phone.controller.ClientController;
+package com.utn.UTN.Phone.controller.clientController;
 import com.utn.UTN.Phone.dto.CallDto;
 import com.utn.UTN.Phone.exceptions.LineNotExistsException;
 import com.utn.UTN.Phone.exceptions.PermissionDeniedException;

@@ -1,16 +1,20 @@
 -------------------------------------------------indices-----------------------------------------------------------------------
 
 --INDEX RANGE SCAN
+
+--tabla creada (date_index) para aumentar la performance al crear un indice BTREE
 EXPLAIN EXTENDED SELECT * FROM calls c WHERE c.origincall=2 and c.create_at between "2020-01-01" and "2020-07-12";
 CREATE INDEX idx_call_date ON calls(date_index) USING BTREE;
+
+--tabla creada (date_index) para aumentar la performance al crear un indice BTREE
 --INDEX RANGE SCAN
 EXPLAIN EXTENDED SELECT i.* FROM invoices i inner join lines_users li on li.idline=i.idline where li.linenumber="+54 (9) 223 154211100" and i.create_at between "2020-01-01" and "2020-07-12" ORDER BY i.state ASC;
 CREATE INDEX idx_invoice_date ON invoices(date_index) USING BTREE;
 
-
 --show INDEX from calls
---BTREE 		   para "between" para fechas
---hashTable 		para buscar los numeros de telefonos o nombres cuando haces "="
+
+--Crear indice BTREE para "between" para fechas
+--Craer indice  HASHTABLE para buscar los numeros de telefonos o nombres cuando haces "="
 
 -----------------------------------------------------usuarios----------------------------------------------------------
 
@@ -22,9 +26,11 @@ CREATE user 'backoffice'@'localhost' identified by '111111';
 --user
 GRANT SELECT ON utnphone.users TO 'backoffice'@'localhost';
 GRANT INSERT ON utnphone.users TO 'backoffice'@'localhost';
+
 GRANT EXECUTE ON PROCEDURE utnphone.sp_update_common_user TO 'backoffice'@'localhost';
 --rates
 GRANT INSERT ON utnphone.rates TO 'backoffice'@'localhost';
+GRANT SELECT ON utnphone.rates TO 'backoffice'@'localhost';
 --lines
 GRANT SELECT ON utnphone.lines_users TO 'backoffice'@'localhost';
 GRANT EXECUTE ON PROCEDURE utnphone.sp_create_line TO 'backoffice'@'localhost';
@@ -66,7 +72,6 @@ DELIMITER ;
 
 
 
-
 -- phpMyAdmin SQL Dump
 -- version 4.8.5
 -- https://www.phpmyadmin.net/
@@ -92,7 +97,7 @@ SET GLOBAL time_zone = "-03:00";
 --
 
 DELIMITER $$
---
+-- author mariano
 -- Procedimientos
 --
 DROP PROCEDURE IF EXISTS `crear_llamadas_de_patricio_a_mariano`$$
@@ -101,9 +106,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `crear_llamadas_de_patricio_a_marian
     DECLARE vCount int DEFAULT 0;
     DECLARE vduration TIME;
     DECLARE vdate DATETIME;
-	
-	
-	
+
     ciclo:LOOP 
     			if(vCount>pvueltas) 
 				then LEAVE ciclo;
@@ -281,7 +284,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `sp_update_common_user` (IN `usernam
 
 END$$
 
---
+-- author mariano
 -- Funciones
 --
 DROP FUNCTION IF EXISTS `f_calls_add_idCities`$$

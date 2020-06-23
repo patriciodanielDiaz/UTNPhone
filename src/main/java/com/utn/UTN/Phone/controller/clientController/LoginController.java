@@ -1,10 +1,13 @@
-package com.utn.UTN.Phone.controller.ClientController;
+package com.utn.UTN.Phone.controller.clientController;
 
 import com.utn.UTN.Phone.dto.LoginDto;
 import com.utn.UTN.Phone.exceptions.*;
 import com.utn.UTN.Phone.model.User;
 import com.utn.UTN.Phone.service.UserService;
 import com.utn.UTN.Phone.session.SessionManager;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +28,12 @@ public class LoginController {
         this.sessionManager = sessionManager;
     }
 
-    /*@ApiOperation(value= "user login")
+    @ApiOperation(value= "user login")
     @ApiResponses(value={
             @ApiResponse(code =200, message = "successful login"),
             @ApiResponse(code =400, message = "incomplete data"),
-            @ApiResponse(code =400, message = "User not exists")
-    })*/
+            @ApiResponse(code =401, message = "User not exists")
+    })
     @PostMapping("/login")
     public ResponseEntity login(@RequestBody @Valid LoginDto loginDto) throws ValidationException, UserNotExistException {
 
@@ -44,10 +47,10 @@ public class LoginController {
         return ResponseEntity.ok().headers(createHeaders(token)).build();
     }
 
-    /*@ApiOperation(value= "user login")
+    @ApiOperation(value= "user login")
     @ApiResponses(value={
-            @ApiResponse(code =200, message = "successful login")
-    })*/
+            @ApiResponse(code =200, message = "successful logout")
+    })
     @PostMapping("/logout")
     public ResponseEntity logout(@RequestHeader("Authorization") String token) {
         sessionManager.removeSession(token);

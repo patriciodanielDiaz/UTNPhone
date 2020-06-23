@@ -17,7 +17,7 @@ public interface CityRepository extends JpaRepository<City,Integer> {
             "    group by ca.destinationcall\n" +
             "    order by count(ca.destinationcall) desc\n" +
             "    limit 10;", nativeQuery = true)
-    List<City> getDestinationTop(String lineNumber);
+    List<City> getTopDestination(String lineNumber);
 
     City findByCity(String city);
 

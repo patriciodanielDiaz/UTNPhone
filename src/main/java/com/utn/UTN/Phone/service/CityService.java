@@ -25,7 +25,7 @@ public class CityService {
     }
 
     public List<City> getTopDestination(String lineNumber) throws RecordNotExistsException {
-        List<City> cities=cityRepository.getDestinationTop(lineNumber);
+        List<City> cities=cityRepository.getTopDestination(lineNumber);
         return Optional.ofNullable(cities).orElseThrow(() -> new RecordNotExistsException());
     }
 

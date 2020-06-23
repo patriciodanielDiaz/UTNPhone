@@ -1,6 +1,6 @@
-package controller.controller.ClientController;
+package com.utn.UTN.Phone.controller.clientController;
 
-import com.utn.UTN.Phone.controller.ClientController.CallController;
+import com.utn.UTN.Phone.controller.clientController.CallController;
 import com.utn.UTN.Phone.service.CallService;
 import com.utn.UTN.Phone.service.LineService;
 import com.utn.UTN.Phone.service.UserService;
