@@ -3,6 +3,7 @@ package com.utn.UTN.Phone.controller.backofficeController;
 import com.utn.UTN.Phone.dto.UserDto;
 import com.utn.UTN.Phone.exceptions.*;
 import com.utn.UTN.Phone.model.User;
+import com.utn.UTN.Phone.restUtill.RestUtil;
 import com.utn.UTN.Phone.service.UserService;
 import com.utn.UTN.Phone.session.SessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @RestController
-@RequestMapping("/backoffice/users")
+@RequestMapping("/backoffice/user")
 public class UserBackofficeController {
 
     UserService userService;
@@ -46,22 +47,19 @@ public class UserBackofficeController {
         }
         user= userService.addUser(userAdd);
         System.out.println(user.getId());
-        URI location= ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(user.getId()).toUri();
-        return ResponseEntity.created(location).build();
+        return ResponseEntity.created(RestUtil.getLocation(user.getId())).build();
     }
     @PutMapping("/{dni}")
     public ResponseEntity UpdateUser(@RequestHeader("Authorization") String sessionToken,
                                      @RequestBody @Valid UserDto userDto,
-                                     @PathVariable("dni") String dni)
-            throws URISyntaxException{
+                                     @PathVariable("dni") String dni) {
 
         ResponseEntity response;
         User user;
         user = userService.findByDni(dni);
         if(user!=null){
             Integer idUser=userService.updateCommonUser(userDto, user.getId());
-            URI location= ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(idUser).toUri();
-            return ResponseEntity.created(location).build();}
+            return ResponseEntity.created(RestUtil.getLocation(idUser)).build();}
         else{
             return ResponseEntity.badRequest().build();
         }

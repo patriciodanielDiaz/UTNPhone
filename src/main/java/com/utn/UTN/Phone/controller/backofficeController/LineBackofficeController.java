@@ -4,6 +4,7 @@ import com.utn.UTN.Phone.exceptions.*;
 import com.utn.UTN.Phone.model.Line;
 import com.utn.UTN.Phone.model.LineType;
 import com.utn.UTN.Phone.model.User;
+import com.utn.UTN.Phone.restUtill.RestUtil;
 import com.utn.UTN.Phone.service.LineService;
 import com.utn.UTN.Phone.service.LineTypeService;
 import com.utn.UTN.Phone.service.UserService;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/backoffice/lines")
+@RequestMapping("/backoffice/line")
 public class LineBackofficeController {
     LineService lineService;
     UserService userService;
@@ -57,8 +58,7 @@ public class LineBackofficeController {
         LineType linetype=lineTypeService.getByType(type);
         if(user!=null) {
             Integer idline = lineService.createLine(user.getId(),linetype.getId());
-            URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{idLine}").buildAndExpand(idline).toUri();
-            responseEntity = ResponseEntity.created(location).build();
+            responseEntity = ResponseEntity.created(RestUtil.getLocation(idline)).build();
         }
         else {
             responseEntity = ResponseEntity.status(HttpStatus.NO_CONTENT).build();

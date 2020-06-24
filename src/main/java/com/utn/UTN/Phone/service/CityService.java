@@ -2,7 +2,6 @@ package com.utn.UTN.Phone.service;
 
 import com.utn.UTN.Phone.exceptions.CityNotExistsException;
 import com.utn.UTN.Phone.exceptions.RecordNotExistsException;
-import com.utn.UTN.Phone.dto.CityDto;
 import com.utn.UTN.Phone.model.City;
 import com.utn.UTN.Phone.repository.CityRepository;
 import org.springframework.beans.factory.annotation.Autowired;

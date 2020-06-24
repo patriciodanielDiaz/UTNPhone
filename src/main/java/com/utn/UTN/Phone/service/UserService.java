@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Optional;
 
 @Service
@@ -24,7 +27,7 @@ public class UserService {
 
 
     public User login(String username, String password) throws UserNotExistException {
-        User u = userRepository.login(username, password);
+        User u = userRepository.login(username, cryptWithMD5(password));
         return Optional.ofNullable(u).orElseThrow(() -> new UserNotExistException());
     }
 
@@ -37,11 +40,12 @@ public class UserService {
     }
 
     public User addUser(User user) {
+        user.setPassword(cryptWithMD5(user.getPassword()));
         return userRepository.save(user);
     }
 
     public Integer updateCommonUser(UserDto userDto, Integer id) {
-        return userRepository.updateCommonUser(userDto.getUser(), userDto.getPassword(), userDto.getName(), userDto.getLastname(), userDto.getDni(), userDto.getCity(), id);
+        return userRepository.updateCommonUser(userDto.getUser(), cryptWithMD5(userDto.getPassword()), userDto.getName(), userDto.getLastname(), userDto.getDni(), userDto.getCity(), id);
     }
 
     public void removeUser(Integer id) {
@@ -53,17 +57,28 @@ public class UserService {
         return Optional.ofNullable(u).orElseThrow(() -> new UserNotExistException());
     }
 
-    /* public List<User> getAll() throws UserNotExistException {
-        List<User> list = userRepository.findAll();
-        return Optional.ofNullable(list).orElseThrow(() -> new UserNotExistException());
-    }
-
-    public Optional<User> getById(Integer id) throws UserNotExistException {
-        Optional<User> u= userRepository.findById(id);
+    //----------------------------------parcial German-------------------------------------------
+    public User getUserByNum(String lineNum) throws UserNotExistException {
+        User u = userRepository.getUserByNum(lineNum);
         return Optional.ofNullable(u).orElseThrow(() -> new UserNotExistException());
-
     }
-   public Integer addCommonUser(UserDto userDto) throws SQLException {
-        return userRepository.addCommonUser(userDto.getUser(), userDto.getPassword(), userDto.getName(), userDto.getLastname(), userDto.getDni(), userDto.getCity());
-    }*/
+    //-------------------------------------------------------------------------------
+    public static String cryptWithMD5 (String pass){
+
+        MessageDigest m = null;
+        try {
+            m = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        byte[] data = pass.getBytes();
+        m.update(data,0,data.length);
+        BigInteger i = new BigInteger(1, m.digest());
+        String hashtext = i.toString(16);
+        while (hashtext.length() < 32) {
+            hashtext = "0" + hashtext;
+        }
+        return hashtext;
+    }
+
 }

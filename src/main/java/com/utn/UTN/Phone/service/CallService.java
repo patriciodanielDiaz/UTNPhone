@@ -44,5 +44,9 @@ public class CallService {
         return Optional.ofNullable(lines).orElseThrow(() -> new RecordNotExistsException());
     }
 
+    public Call getCallSmall() throws RecordNotExistsException {
+        Call call=callRepository.getCallSmall();
+        return Optional.ofNullable(call).orElseThrow(() -> new RecordNotExistsException());
+    }
 
 }

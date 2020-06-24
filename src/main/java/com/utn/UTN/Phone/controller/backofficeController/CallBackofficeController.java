@@ -5,6 +5,7 @@ import com.utn.UTN.Phone.exceptions.*;
 import com.utn.UTN.Phone.model.Call;
 import com.utn.UTN.Phone.model.Line;
 import com.utn.UTN.Phone.model.User;
+import com.utn.UTN.Phone.restUtill.RestUtil;
 import com.utn.UTN.Phone.service.*;
 import com.utn.UTN.Phone.session.SessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,22 +70,13 @@ public class CallBackofficeController {
     //------------------------ antena que inserta llamadas ----------------------------------
 
     @PostMapping("/entry")//localhost:8080/backoffice/call/entry/
-    public ResponseEntity addCall(@RequestHeader("Authorization") String sessionToken,@Valid @RequestBody CallDto callDto) throws LineNotExistsException, PermissionDeniedException, ParseException {
+    public ResponseEntity addCall(@RequestHeader("Authorization") String sessionToken,@Valid @RequestBody CallDto callDto) throws LineNotExistsException {
 
-        ResponseEntity responseEntity;
         User antena= sessionManager.getCurrentUser(sessionToken);
-        if (antena.getUser().equals("antenna") && antena.getPassword().equals("000000")) {
-
-            Line origin=lineService.getLineByNumber(callDto.getOriginNumber());
-            Line destination=lineService.getLineByNumber(callDto.getDestinationNumber());
-            Call call = callService.addCall(origin,destination,callDto.getDuration(),callDto.getDateTime());
-
-            URI location= ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(call.getId()).toUri();
-            responseEntity =ResponseEntity.created(location).build();
-        } else {
-            responseEntity = ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-        return responseEntity;
+        Line origin=lineService.getLineByNumber(callDto.getOriginNumber());
+        Line destination=lineService.getLineByNumber(callDto.getDestinationNumber());
+        Call call = callService.addCall(origin,destination,callDto.getDuration(),callDto.getDateTime());
+        return ResponseEntity.created(RestUtil.getLocation(call.getId())).build();
 
     }
 

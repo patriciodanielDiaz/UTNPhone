@@ -4,6 +4,7 @@ import com.utn.UTN.Phone.dto.LoginDto;
 import com.utn.UTN.Phone.dto.UserDto;
 import com.utn.UTN.Phone.model.User;
 import com.utn.UTN.Phone.proyection.ProfileProyection;
+import com.utn.UTN.Phone.restUtill.RestUtil;
 import com.utn.UTN.Phone.service.UserService;
 import com.utn.UTN.Phone.exceptions.*;
 import com.utn.UTN.Phone.session.SessionManager;
@@ -29,12 +30,11 @@ public class UserController {
     }
 
     @GetMapping("/")
-    private ResponseEntity<ProfileProyection> getProfile(@RequestHeader("Authorization") String sessionToken) throws PermissionDeniedException, UserNotExistException {
+    public ResponseEntity<ProfileProyection> getProfile(@RequestHeader("Authorization") String sessionToken) throws PermissionDeniedException, UserNotExistException {
 
         User currentUser = sessionManager.getCurrentUser(sessionToken);
-        if (currentUser == null) {
-            throw new PermissionDeniedException();
-        }
+        if (currentUser == null) throw new PermissionDeniedException();
+
         ProfileProyection profileProyection= userService.getProfile(currentUser.getId());
         return (profileProyection!= null) ? ResponseEntity.ok(profileProyection) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
@@ -45,13 +45,10 @@ public class UserController {
                                      throws PermissionDeniedException {
 
         User currentUser = sessionManager.getCurrentUser(sessionToken);
-        if (currentUser == null) {
-            throw new PermissionDeniedException();
-        }
+        if (currentUser == null) throw new PermissionDeniedException();
 
         Integer idUser=userService.updateCommonUser(userDto, currentUser.getId());
-        URI location= ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(idUser).toUri();
-        return ResponseEntity.created(location).build();
+       return ResponseEntity.created(RestUtil.getLocation(idUser)).build();
     }
 
     @DeleteMapping("/")

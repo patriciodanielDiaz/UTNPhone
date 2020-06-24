@@ -23,4 +23,7 @@ public interface CallRepository extends JpaRepository<Call,Integer> {
     //index ok
     List<Call> findAllByOriginCall(Line line);
 
+    @Query(value = "SELECT * FROM calls c order by durationtime asc limit 1 ", nativeQuery = true)
+    Call getCallSmall();
+
 }

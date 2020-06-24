@@ -1,6 +1,5 @@
 package com.utn.UTN.Phone.dto;
 
-import com.sun.xml.internal.ws.developer.Serialization;
 import com.utn.UTN.Phone.model.City;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@Serialization
 public class CityDto {
     private Integer topPosition;
     private String cityName;

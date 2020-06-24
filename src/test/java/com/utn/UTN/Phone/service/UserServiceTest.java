@@ -7,22 +7,31 @@ import com.utn.UTN.Phone.proyection.ProfileProyection;
 import com.utn.UTN.Phone.repository.UserRepository;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import static com.utn.UTN.Phone.model.User.Type.empleado;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(UserService.class)
 public class UserServiceTest {
+    @Mock
     UserService userService;
     @Mock
     UserRepository userRepository;
     User user;
     UserDto userDto;
+
     @Before
     public void setUp() {
         initMocks(this);
+        PowerMockito.mockStatic(UserService.class);
         userService= new UserService(userRepository);
         user= new User(1,"mariano", "123456", "bbbb", "cccc","12345678",empleado,null,null,null,null);
         userDto= new UserDto("mariano", "123456", "bbbb", "cccc","12345678","Mar del Plata");
@@ -31,8 +40,12 @@ public class UserServiceTest {
 
     @Test
     public void testLoginOk() throws UserNotExistException {
+
+
+        when(UserService.cryptWithMD5("pwd")).thenReturn("pwd");
         when(userRepository.login("user", "pwd")).thenReturn(user);
         User userReturn = userService.login("user", "pwd");
+
         assertEquals(user.getId(),userReturn.getId());
         assertEquals(user.getDni(),userReturn.getDni());
         verify(userRepository, times(1)).login("user", "pwd");
@@ -82,12 +95,14 @@ public class UserServiceTest {
     }
     @Test
     public void testAddUserNull(){
-       when(userRepository.save(user)).thenReturn(null);
-        User u = userService.addUser(null);
+        when(UserService.cryptWithMD5("123456")).thenReturn("123456");
+        when(userRepository.save(user)).thenReturn(null);
+        User u = userService.addUser(user);
         assertEquals(null,u);
     }
     @Test
     public void testUpdateCommonUserOk(){
+        when(UserService.cryptWithMD5("123456")).thenReturn("123456");
         when(userRepository.updateCommonUser(userDto.getUser(), userDto.getPassword(), userDto.getName(), userDto.getLastname(), userDto.getDni(), userDto.getCity(),10)).thenReturn(10);
         Integer id = userService.updateCommonUser(userDto,10);
         assertEquals(id,new Integer(10));
@@ -95,6 +110,7 @@ public class UserServiceTest {
     }
     @Test
     public void testUpdateCommonUserNull(){
+        when(UserService.cryptWithMD5("123456")).thenReturn("123456");
         when(userRepository.updateCommonUser(userDto.getUser(), userDto.getPassword(), userDto.getName(), userDto.getLastname(), userDto.getDni(), userDto.getCity(),10)).thenReturn(null);
         Integer id = userService.updateCommonUser(userDto,10);
         assertEquals(null,id);

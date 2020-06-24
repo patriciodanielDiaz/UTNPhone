@@ -56,6 +56,7 @@ public class Invoice {
     private Date dateIssued;
 
     @Column(name = "expiration")
+    @Temporal(TemporalType.DATE)
     private Date expiration;
 
     @Column(name = "state")

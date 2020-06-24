@@ -12,7 +12,7 @@ public class SessionManager {
 
     Map<String, Session> sessionMap = new Hashtable<>();
 
-    int sesionExpiration = 600000;
+    int sesionExpiration = 6000000;
 
     public SessionManager() {
         sessionMap = new Hashtable<>();

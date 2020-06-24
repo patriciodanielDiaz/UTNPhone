@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +23,7 @@ public class InvoiceDto {
     String dni;
     Float total;
     String state;
+    @Temporal(TemporalType.DATE)
     Date expirationDate;
 
     public static List<InvoiceDto> transferToInvoicesDto(List<Invoice> invoices){

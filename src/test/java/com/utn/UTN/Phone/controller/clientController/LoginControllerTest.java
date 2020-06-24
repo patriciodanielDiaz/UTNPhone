@@ -43,7 +43,6 @@ public class LoginControllerTest {
 
         assertEquals( ResponseEntity.ok().headers(responseHeaders).build(),responseEntity);
 
-        //verificar que son llamados una vez
         verify(userService, times(1)).login("user", "pwd");
         verify(sessionManager, times(1)).createSession(loggedUser);
     }

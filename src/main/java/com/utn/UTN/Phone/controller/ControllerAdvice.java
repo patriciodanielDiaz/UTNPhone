@@ -62,4 +62,8 @@ import java.sql.SQLException;
         @ExceptionHandler(CityNotExistsException.class)
         public ErrorDto handleCityNotExistsException(CityNotExistsException e) {return new ErrorDto(10,"city not exists"); }
 
+        @ResponseStatus(HttpStatus.CONFLICT)
+        @ExceptionHandler(IncorrectDateException.class)
+        public ErrorDto handleIncorrectDateException() { return new ErrorDto(11, "date out of rank"); }
+
 }

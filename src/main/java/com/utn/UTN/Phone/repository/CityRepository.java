@@ -1,7 +1,6 @@
 package com.utn.UTN.Phone.repository;
 
 import com.utn.UTN.Phone.model.City;
-import com.utn.UTN.Phone.dto.CityDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
