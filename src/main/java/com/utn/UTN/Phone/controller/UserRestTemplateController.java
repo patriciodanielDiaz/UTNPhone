@@ -16,11 +16,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
-@RestController
-@RequestMapping("/parcial")
+//@RestController
+//@RequestMapping("/parcial")
 public class UserRestTemplateController {
 
-    CallService callService;
+    /*CallService callService;
     UserService userService;
 
     @Autowired
@@ -39,5 +39,5 @@ public class UserRestTemplateController {
         User user =userService.getUserByNum(call.getOriginCall().getLinenumber());
 
         return (user!= null) ? ResponseEntity.ok(user) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
+    }*/
 }

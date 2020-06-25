@@ -4,7 +4,7 @@ import com.utn.UTN.Phone.exceptions.*;
 import com.utn.UTN.Phone.model.Line;
 import com.utn.UTN.Phone.model.LineType;
 import com.utn.UTN.Phone.model.User;
-import com.utn.UTN.Phone.restUtill.RestUtil;
+import com.utn.UTN.Phone.config.RestUtil;
 import com.utn.UTN.Phone.service.LineService;
 import com.utn.UTN.Phone.service.LineTypeService;
 import com.utn.UTN.Phone.service.UserService;
@@ -13,9 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 

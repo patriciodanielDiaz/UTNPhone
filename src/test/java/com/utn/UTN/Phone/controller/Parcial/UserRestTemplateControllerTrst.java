@@ -21,7 +21,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class UserRestTemplateControllerTrst {
 
-    @Mock
+   /*@Mock
     CallService callService;
     @Mock
     UserService userService;
@@ -64,5 +64,5 @@ public class UserRestTemplateControllerTrst {
        userRestTemplateController.getCallsmall();
 
 
-    }
+    }*/
 }

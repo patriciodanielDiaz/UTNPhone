@@ -1,5 +1,8 @@
 package com.utn.UTN.Phone.controller.clientController;
 
+import com.utn.UTN.Phone.config.Crypt;
+import com.utn.UTN.Phone.config.RestUtil;
+import com.utn.UTN.Phone.dto.LoginDto;
 import com.utn.UTN.Phone.dto.UserDto;
 import com.utn.UTN.Phone.exceptions.InvalidLoginException;
 import com.utn.UTN.Phone.exceptions.PermissionDeniedException;
@@ -12,6 +15,7 @@ import com.utn.UTN.Phone.session.SessionManager;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.powermock.core.PowerMockUtils;
 import org.springframework.http.HttpStatus;
@@ -31,9 +35,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(RestUtil.class)
 public class UserControllerTest {
-
+    @Mock
+    RestUtil restUtil;
     UserController userController;
     User user;
     ProfileProyection profileProyection;
@@ -45,6 +51,7 @@ public class UserControllerTest {
     @Before
     public void setUp() throws UserNotExistException {
         initMocks(this);
+        PowerMockito.mockStatic(RestUtil.class);
         userController = new UserController(userService, sessionManager);
         user = new User(1, "patricio", "123456", "bbbb", "cccc", "12345678", empleado, null, null, null, null);
 
@@ -70,7 +77,7 @@ public class UserControllerTest {
         verify(sessionManager, times(1)).getCurrentUser("123456");
     }
     @Test
-    public void getProfileNoContentOk() throws PermissionDeniedException, UserNotExistException {
+    public void testGetProfileNoContentOk() throws PermissionDeniedException, UserNotExistException {
 
         when(sessionManager.getCurrentUser("123456")).thenReturn(user);
         when(userService.getProfile(1)).thenReturn(null);
@@ -82,13 +89,13 @@ public class UserControllerTest {
     }
 
     @Test(expected = PermissionDeniedException.class)
-    public void getProfilePermissionDeniedException() throws PermissionDeniedException, UserNotExistException {
+    public void testGetProfilePermissionDeniedException() throws PermissionDeniedException, UserNotExistException {
         when(sessionManager.getCurrentUser("123456")).thenReturn(null);
         userController.getProfile("123456");
     }
 
     @Test(expected = UserNotExistException.class)
-    public void getProfileUserNotExistException() throws PermissionDeniedException, UserNotExistException {
+    public void testGetProfileUserNotExistException() throws PermissionDeniedException, UserNotExistException {
 
         when(sessionManager.getCurrentUser("123456")).thenReturn(user);
         when(userService.getProfile(1)).thenThrow(new UserNotExistException());
@@ -96,19 +103,50 @@ public class UserControllerTest {
     }
 
     @Test
-    public void getUpdateUserOk()throws PermissionDeniedException {
+    public void testUpdateUserOk()throws PermissionDeniedException {
         UserDto userDto = new UserDto("patricio", "123456", "patricio", "diaz", "123456", "Mar del Plata");
         when(sessionManager.getCurrentUser("123456")).thenReturn(user);
         when(userService.updateCommonUser(userDto,1)).thenReturn(1);
-        ResponseEntity re= userController.updateUser("123456",userDto);
+        when(RestUtil.getLocation(1)).thenReturn(URI.create("miUri.com"));
 
+        ResponseEntity re= userController.updateUser("123456",userDto);
+        List<String> headers = re.getHeaders().get("location");
+        Assert.assertEquals(headers.get(0), "miUri.com");
+
+    }
+    @Test(expected = PermissionDeniedException.class)
+    public void testUpdateUserPermissionDeniedException() throws PermissionDeniedException {
+
+        UserDto userDto = new UserDto("patricio", "123456", "patricio", "diaz", "123456", "Mar del Plata");
+        when(sessionManager.getCurrentUser("123456")).thenReturn(null);
+        userController.updateUser("123456",userDto);
     }
 
     @Test
-    public void getRemoveUserOk ()throws PermissionDeniedException, InvalidLoginException {
+    public void testRemoveUserOk ()throws PermissionDeniedException, InvalidLoginException {
+        LoginDto loginDto=new LoginDto("patricio","123456");
+        when(sessionManager.getCurrentUser("123456")).thenReturn(user);
+        doNothing().when(userService).removeUser(any());
+        ResponseEntity re= userController.removeUser("123456",loginDto);
 
-
+        Assert.assertEquals(ResponseEntity.ok().build(),re);
     }
+
+    @Test(expected = PermissionDeniedException.class)
+    public void testRemoveUserPermissionDeniedException() throws PermissionDeniedException, InvalidLoginException {
+
+        LoginDto loginDto=new LoginDto("patricio","123456");
+        when(sessionManager.getCurrentUser("123456")).thenReturn(null);
+        userController.removeUser("123456",loginDto);
+    }
+    @Test(expected = InvalidLoginException.class)
+    public void testRemoveUserInvalidLoginException() throws InvalidLoginException, PermissionDeniedException {
+
+        LoginDto loginDto=new LoginDto("mariano","654321");
+        when(sessionManager.getCurrentUser("123456")).thenReturn(user);
+        userController.removeUser("123456",loginDto);
+    }
+
 }
 //-------------------------------------------------------------------------------------
       /*MessageDigest m = MessageDigest.getInstance("MD5");

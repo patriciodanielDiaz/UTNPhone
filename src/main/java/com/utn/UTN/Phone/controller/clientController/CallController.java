@@ -46,9 +46,11 @@ public class CallController{
                                                     @RequestParam(value = "to", required = false) String dateTo)
                                                     throws UserNotExistException, ParseException, PermissionDeniedException, RecordNotExistsException, LineNotExistsException {
 
-        User currentUser = getCurrentUser(sessionToken);
-        Line line=lineService.getLineByNumber(lineNumber);
-        if(!currentUser.getId().equals(line.getUserId())) throw new PermissionDeniedException();
+        User user = Optional.ofNullable(sessionManager.getCurrentUser(sessionToken)).orElseThrow(UserNotExistException::new);
+
+        Line line = lineService.getLineByNumber(lineNumber);
+
+        if(!user.getId().equals(line.getUserId())) throw new PermissionDeniedException();
         List<Call> calls ;
 
         if ((dateFrom != null) && (dateTo != null)) {
@@ -65,14 +67,13 @@ public class CallController{
 
     @GetMapping("/{lineNumber}/destinations/") //localhost:8080/api/call/+54 (9) 223 154211100/Destinations/
     public ResponseEntity<List<CityDto>> getDestinationsTop(@RequestHeader("Authorization") String sessionToken,
-                                                         @PathVariable("lineNumber") String lineNumber) throws RecordNotExistsException {
+                                                         @PathVariable("lineNumber") String lineNumber) throws RecordNotExistsException, PermissionDeniedException, LineNotExistsException, UserNotExistException {
 
+        User user = Optional.ofNullable(sessionManager.getCurrentUser(sessionToken)).orElseThrow(UserNotExistException::new);
+        Line line = lineService.getLineByNumber(lineNumber);
+        if(!user.getId().equals(line.getUserId())) throw new PermissionDeniedException();
         List<City> cities=cityService.getTopDestination(lineNumber);
         return (cities.size() > 0) ? ResponseEntity.ok(CityDto.transferToCityDto(cities)) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
-    private User getCurrentUser(String sessionToken) throws UserNotExistException {
-        return Optional.ofNullable(sessionManager.getCurrentUser(sessionToken)).orElseThrow(UserNotExistException::new);
     }
 
 }

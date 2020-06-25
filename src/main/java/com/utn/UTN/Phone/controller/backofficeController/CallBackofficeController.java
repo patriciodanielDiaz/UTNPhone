@@ -5,17 +5,15 @@ import com.utn.UTN.Phone.exceptions.*;
 import com.utn.UTN.Phone.model.Call;
 import com.utn.UTN.Phone.model.Line;
 import com.utn.UTN.Phone.model.User;
-import com.utn.UTN.Phone.restUtill.RestUtil;
+import com.utn.UTN.Phone.config.RestUtil;
 import com.utn.UTN.Phone.service.*;
 import com.utn.UTN.Phone.session.SessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.net.URI;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;

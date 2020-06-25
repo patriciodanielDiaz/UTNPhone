@@ -1,4 +1,4 @@
-package com.utn.UTN.Phone.restUtill;
+package com.utn.UTN.Phone.config;
 
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 

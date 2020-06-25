@@ -26,11 +26,11 @@ public interface  UserRepository extends JpaRepository<User,Integer> {
 
     @Procedure( name  =  "sp_update_common_user" )
     Integer  updateCommonUser(@Param( "username" )String  username, @Param ( "pass" )String pass, @Param ( "firstname" )String firstname, @Param ( "lastname" )String lastname, @Param ( "dni" )String dni, @Param ( "city" )String city, @Param ( "idUser" )Integer idUser);
-
+/*
     //---------------------------------------parcial German-------------------------------------------
     @Query(value = "select u.* from users u inner join lines_users lu on u.id=lu.iduser where lu.linenumber = ?1",nativeQuery = true)
     User getUserByNum(String lineNum);
-/*
+
     @Procedure( name  =  "sp_insert_common_user" )
     Integer  addCommonUser(@Param( "username" )String  username, @Param ( "pass" )String pass, @Param ( "firstname" )String firstname, @Param ( "lastname" )String lastname, @Param ( "dni" )String dni, @Param ( "city" )String city);
 
