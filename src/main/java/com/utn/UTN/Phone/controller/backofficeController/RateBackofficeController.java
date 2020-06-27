@@ -16,35 +16,32 @@ import java.util.List;
 @RestController
 @RequestMapping("/backoffice/rate")
 public class RateBackofficeController {
-    UserService userService;
     RateService rateService;
     CityService cityService;
-    SessionManager sessionManager;
 
     @Autowired
-    public RateBackofficeController(UserService userService, CityService cityService ,RateService rateService, SessionManager sessionManager) {
-        this.userService = userService;
+    public RateBackofficeController(CityService cityService ,RateService rateService) {
+
         this.rateService = rateService;
         this.cityService = cityService;
-        this.sessionManager = sessionManager;
+
     }
 
     @GetMapping //  posman localhost:8080/backoffice/rate
-    public ResponseEntity<List<Rate>> getRate(@RequestHeader("Authorization") String sessionToken) throws RecordNotExistsException {
+    public ResponseEntity<List<Rate>> getRates(@RequestHeader("Authorization") String sessionToken) throws RecordNotExistsException {
 
         List<Rate> rates = rateService.getAll();
-
-        return  (rates.size() > 0) ? ResponseEntity.ok(rates) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return  ResponseEntity.ok(rates);
 
     }
 
     @GetMapping("/{city}/") //  posman localhost:8080/backoffice/rate/Mar Del Plata/
-    public ResponseEntity<List<Rate>> getRate(@RequestHeader("Authorization") String sessionToken,
+    public ResponseEntity<List<Rate>> getRatesByCity(@RequestHeader("Authorization") String sessionToken,
                                                  @PathVariable("city") String city) throws CityNotExistsException, RecordNotExistsException {
 
         City c=cityService.getCityByName(city);
         List<Rate> rates = rateService.getByCity(c);
-        return  (rates.size() > 0) ? ResponseEntity.ok(rates) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return  ResponseEntity.ok(rates);
 
     }
 }

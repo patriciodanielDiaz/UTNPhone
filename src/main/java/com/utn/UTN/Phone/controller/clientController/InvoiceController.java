@@ -40,7 +40,7 @@ public class InvoiceController {
                                                              @RequestParam(value = "to", required = false) String to)
                                                             throws UserNotExistException, ParseException, PermissionDeniedException, RecordNotExistsException, LineNotExistsException {
 
-        User currentUser = getCurrentUser(sessionToken);
+        User currentUser = Optional.ofNullable(sessionManager.getCurrentUser(sessionToken)).orElseThrow(UserNotExistException::new);
         Line line=lineService.getLineByNumber(lineNumber);
         if(!currentUser.getId().equals(line.getUserId())) throw new PermissionDeniedException();
         List<Invoice> invoices = new ArrayList<>();
@@ -53,10 +53,6 @@ public class InvoiceController {
             invoices = invoiceService.getInvoicesByLine(line);
         }
         return  (invoices.size() > 0) ? ResponseEntity.ok(InvoiceDto.transferToInvoicesDto(invoices)) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
-
-    private User getCurrentUser(String sessionToken) throws UserNotExistException {
-        return Optional.ofNullable(sessionManager.getCurrentUser(sessionToken)).orElseThrow(UserNotExistException::new);
     }
 
 }

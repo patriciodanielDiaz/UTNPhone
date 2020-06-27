@@ -37,18 +37,16 @@ public class UserBackofficeController {
             throw new DuplicateDNI();
         } else {
             user = userService.findByUser(userAdd.getUser());
-
             if (user != null) {
                 throw new DuplicateUserName();
             }
         }
         user= userService.addUser(userAdd);
-        System.out.println(user.getId());
+
         return ResponseEntity.created(RestUtil.getLocation(user.getId())).build();
     }
     @PutMapping("/{dni}")
-    public ResponseEntity UpdateUser(@RequestHeader("Authorization") String sessionToken,
-                                     @RequestBody @Valid UserDto userDto,
+    public ResponseEntity updateUser(@RequestBody @Valid UserDto userDto,
                                      @PathVariable("dni") String dni) {
 
         ResponseEntity response;
@@ -63,14 +61,13 @@ public class UserBackofficeController {
     }
 
     @GetMapping("/{dni}")
-    private ResponseEntity <User> getUser(@RequestHeader("Authorization") String sessionToken,
-                                                 @PathVariable("dni") String dni) {
+    public ResponseEntity <User> getUser(@PathVariable("dni") String dni) {
         User user = userService.findByDni(dni);
         return (user!= null) ? ResponseEntity.ok(user) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
     @DeleteMapping("/{dni}")
-    public ResponseEntity removeUser(@RequestHeader("Authorization") String sessionToken,
-                                     @PathVariable("dni") String dni)
+    public ResponseEntity removeUser(@PathVariable("dni") String dni)
                                     throws UserNotExistException {
 
         User user = userService.findByDni(dni);

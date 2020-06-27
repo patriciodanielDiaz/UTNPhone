@@ -41,7 +41,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({CallDto.class,CityDto.class})
 
-public class callControllerTest {
+public class CallControllerTest {
     @Mock
     CallService callService;
     @Mock
@@ -80,7 +80,7 @@ public class callControllerTest {
     }
 
     @Test
-    public void testGetCallByUserDate() throws LineNotExistsException, ParseException, RecordNotExistsException, UserNotExistException, PermissionDeniedException {
+    public void testGetCallByUserDateOk() throws LineNotExistsException, ParseException, RecordNotExistsException, UserNotExistException, PermissionDeniedException {
 
         List<Call> calls=new ArrayList<>();
         calls.add(call);
@@ -183,23 +183,91 @@ public class callControllerTest {
         verify(callService, times(1)).getCallsByLine(lineOrigin);
 
     }
-
-        public void testGetDestinationTop() throws LineNotExistsException, PermissionDeniedException, RecordNotExistsException, UserNotExistException {
+        @Test
+        public void testGetDestinationTopOk() throws LineNotExistsException, PermissionDeniedException, RecordNotExistsException, UserNotExistException {
 
         List<City> cities=new ArrayList<>();cities.add(city1);
+        CityDto cityDto= new CityDto(){};
+        List<CityDto> citiesDto=new ArrayList<>();citiesDto.add(cityDto);
+        when(sessionManager.getCurrentUser("123456")).thenReturn(user);
+        when(lineService.getLineByNumber("123456")).thenReturn( lineOrigin);
+        when(cityService.getTopDestination("123456")).thenReturn(cities);
+        when(CityDto.transferToCityDto(cities)).thenReturn(citiesDto);
+
+        ResponseEntity re=callController.getDestinationsTop("123456", "123456");
+        assertEquals(ResponseEntity.ok(citiesDto), re);
+
+        verify(lineService, times(1)).getLineByNumber("123456");
+        verify(sessionManager, times(1)).getCurrentUser("123456");
+
+    }
+
+    @Test(expected = UserNotExistException.class)
+    public void testGetDestinationTopDateUserNotExistException() throws PermissionDeniedException, UserNotExistException, ParseException, LineNotExistsException, RecordNotExistsException {
+
+        when(sessionManager.getCurrentUser("123456")).thenReturn(null);
+        callController.getDestinationsTop("123456", "123456");
+        verify(sessionManager, times(1)).getCurrentUser("123456");
+
+    }
+
+    @Test(expected = LineNotExistsException.class)
+    public void testGetDestinationTopLineNotExistsException() throws PermissionDeniedException, UserNotExistException, ParseException, LineNotExistsException, RecordNotExistsException {
+
+        Mockito.when(sessionManager.getCurrentUser("123456")).thenReturn(user);
+        Mockito.when(lineService.getLineByNumber("123456")).thenThrow(new LineNotExistsException());
+        callController.getDestinationsTop("123456", "123456");
+
+        verify(lineService, times(1)).getLineByNumber("123456");
+        verify(sessionManager, times(1)).getCurrentUser("123456");
+
+    }
+
+    @Test(expected = PermissionDeniedException.class)
+    public void testGetDestinationTopPermissionDeniedException() throws PermissionDeniedException, UserNotExistException, ParseException, LineNotExistsException, RecordNotExistsException {
+
+        User user2 = new User(2,"Patricio", "123456", "bbbb", "cccc","12345",empleado,null,null,null,null);        LineType lineType=new LineType(1,"celular",null,null);
+
+        Mockito.when(sessionManager.getCurrentUser("123456")).thenReturn(user2);
+        Mockito.when(lineService.getLineByNumber("123456")).thenReturn( lineDest);
+
+        callController.getDestinationsTop("123456", "123456");
+
+        verify(lineService, times(1)).getLineByNumber(lineDest.getLinenumber());
+        verify(sessionManager, times(1)).getCurrentUser("123456");
+
+    }
+    @Test(expected = RecordNotExistsException.class)
+    public void testGetDestinationTopRecordNotExistsException() throws LineNotExistsException, PermissionDeniedException, ParseException, RecordNotExistsException, UserNotExistException {
+
+        List<Call> calls=new ArrayList<>();
+        calls.add(call);
+        when(sessionManager.getCurrentUser("123456")).thenReturn(user);
+        when(lineService.getLineByNumber("123456")).thenReturn( lineOrigin);
+        when(cityService.getTopDestination("123456")).thenThrow(new RecordNotExistsException());
+
+        callController.getDestinationsTop("123456", "123456");
+
+        verify(lineService, times(1)).getLineByNumber("123456");
+        verify(sessionManager, times(1)).getCurrentUser("123456");
+        verify(cityService, times(1)).getTopDestination("123456");
+
+    }
+    /*@Test
+    public void testGetDestinationTop() throws LineNotExistsException, PermissionDeniedException, RecordNotExistsException, UserNotExistException {
+
+        List<City> cities=new ArrayList<>();
         when(sessionManager.getCurrentUser("123456")).thenReturn(user);
         when(lineService.getLineByNumber("123456")).thenReturn( lineOrigin);
         when(cityService.getTopDestination("123456")).thenReturn(cities);
         when(CityDto.transferToCityDto(cities)).thenReturn(new ArrayList<CityDto>());
 
         ResponseEntity re=callController.getDestinationsTop("123456", "123456");
-        assertEquals(ResponseEntity.ok(new ArrayList<CityDto>()), re);
+        assertEquals(ResponseEntity.status(HttpStatus.NO_CONTENT).build(), re);
 
         verify(lineService, times(1)).getLineByNumber("123456");
         verify(sessionManager, times(1)).getCurrentUser("123456");
         verify(callService, times(1)).getCallsByLine(lineOrigin);
 
-    }
-
-
+    }*/
 }

@@ -33,7 +33,7 @@ public class LineBackofficeController {
         this.sessionManager = sessionManager;
     }
     @GetMapping
-    public ResponseEntity<List<Line>> getLineByUser(@RequestHeader("Authorization") String sessionToken,
+    public ResponseEntity<List<Line>> getLine(@RequestHeader("Authorization") String sessionToken,
                                                     @RequestParam(value = "dni", required = false) String dni)
                                                     throws RecordNotExistsException{
 
@@ -48,23 +48,17 @@ public class LineBackofficeController {
     public ResponseEntity <Line> createLine(@RequestHeader("Authorization") String sessionToken,
                                             @PathVariable("dni") String dni,
                                             @RequestParam(value = "lineType", required = true) String type)
-                                            throws LineTypeNotExistsException, UserNotExistException{
+            throws LineTypeNotExistsException, UserNotExistException, LineNotExistsException {
 
-        ResponseEntity responseEntity;
         User user= userService.findByDni(dni);
         Optional.ofNullable(user).orElseThrow(() -> new UserNotExistException());
         LineType linetype=lineTypeService.getByType(type);
-        if(user!=null) {
-            Integer idline = lineService.createLine(user.getId(),linetype.getId());
-            responseEntity = ResponseEntity.created(RestUtil.getLocation(idline)).build();
-        }
-        else {
-            responseEntity = ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-        }
-        return responseEntity;
+
+        Integer idline = lineService.createLine(user.getId(),linetype.getId());
+
+        return ResponseEntity.created(RestUtil.getLocation(idline)).build();
     }
 
-    //solucionar :Request method 'DELETE' not supported
     @DeleteMapping("/{dni}/{number}")
     public ResponseEntity disabledLine(@RequestHeader("Authorization") String sessionToken,
                                        @PathVariable("dni") String dni,
@@ -76,6 +70,6 @@ public class LineBackofficeController {
         Line line=lineService.getLineByNumber(number);
         Integer id= lineService.disabledLine(line.getId());
 
-        return (id > 0) ? ResponseEntity.ok().build() : ResponseEntity.badRequest().build();
+        return ResponseEntity.ok().build();
     }
 }

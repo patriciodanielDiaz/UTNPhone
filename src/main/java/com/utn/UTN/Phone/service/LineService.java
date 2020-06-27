@@ -41,12 +41,14 @@ public class LineService {
         return Optional.ofNullable(lines).orElseThrow(() -> new RecordNotExistsException());
     }
 
-    public Integer createLine(Integer idUser,Integer idType) {
-        return lineRepository.createLine(idUser,idType);
+    public Integer createLine(Integer idUser,Integer idType) throws LineNotExistsException {
+        Integer id=lineRepository.createLine(idUser,idType);
+        return Optional.ofNullable(id).orElseThrow(() -> new LineNotExistsException());
     }
 
-    public Integer disabledLine(Integer id) {
-        return lineRepository.disabledLine(id);
+    public Integer disabledLine(Integer id) throws LineNotExistsException {
+        Integer idLine=lineRepository.disabledLine(id);
+        return Optional.ofNullable(idLine).orElseThrow(() -> new LineNotExistsException());
     }
 
 }

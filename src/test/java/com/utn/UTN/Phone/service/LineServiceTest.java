@@ -103,31 +103,32 @@ public class LineServiceTest {
     }
 
     @Test
-    public void testCreateLineOk(){
+    public void testCreateLineOk() throws LineNotExistsException {
         //UserDto userDto = new UserDto("mariano", "123456", "bbbb", "cccc","12345","Mar del Plata");
         when(lineRepository.createLine(10,2)).thenReturn(10);
         Integer id = lineService.createLine(10,2);
         assertEquals(id,new Integer(10));
         verify(lineRepository, times(1)).createLine(10,2);
     }
-    @Test
-    public void testCreateLineNull(){
+    @Test(expected = LineNotExistsException.class)
+    public void testCreateLineLineNotExistsException() throws LineNotExistsException {
         when(lineRepository.createLine(10,2)).thenReturn(null);
-        Integer id = lineService.createLine(10,2);
-        assertEquals(null,id);
+        lineService.createLine(10,2);
+
     }
 
     @Test
-    public void testDisabledLineOk(){
+    public void testDisabledLineOk() throws LineNotExistsException {
         when(lineRepository.disabledLine(10)).thenReturn(10);
         Integer id = lineService.disabledLine(10);
         assertEquals(id,new Integer(10));
         verify(lineRepository, times(1)).disabledLine(10);
     }
-    @Test
-    public void testDisabledLineNull(){
+    @Test(expected = LineNotExistsException.class)
+    public void testDisabledLineLineNotExistsException() throws LineNotExistsException {
         when(lineRepository.disabledLine(10)).thenReturn(null);
-        Integer id = lineService.disabledLine(10);
-        assertEquals(null,id);
+        lineService.disabledLine(10);
+        verify(lineRepository, times(1)).disabledLine(10);
+
     }
 }

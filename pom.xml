@@ -111,19 +111,21 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.8.2</version>
 				<configuration>
 					<excludes>
-						<exclude>**/model/**</exclude>
-						<exclude>**/session/**</exclude>
-						<exclude>**/projection/**</exclude>
-						<exclude>**/dto/**</exclude>
 						<exclude>**/config/**</exclude>
+						<exclude>**/dto/**</exclude>
 						<exclude>**/exceptions/**</exclude>
+						<exclude>**/model/**</exclude>
+						<exclude>**/projection/**</exclude>
+						<exclude>**/session/**</exclude>
 						<exclude>**/repository/**</exclude>
+						<exclude>**/controller/ControllerAdvice.class</exclude>
 					</excludes>
 				</configuration>
 				<executions>
@@ -132,6 +134,7 @@
 							<goal>prepare-agent</goal>
 						</goals>
 					</execution>
+					<!-- attached to Maven test phase -->
 					<execution>
 						<id>report</id>
 						<phase>test</phase>
@@ -145,14 +148,17 @@
 							<goal>check</goal>
 						</goals>
 						<configuration>
+							<excludes>
+
+							</excludes>
 							<rules>
 								<rule>
 									<element>BUNDLE</element>
 									<limits>
 										<limit>
-											<counter>INTRUCTION</counter>
+											<counter>INSTRUCTION</counter>
 											<value>COVEREDRATIO</value>
-											<minimum>0.70</minimum>
+											<minimum>0.7</minimum>
 										</limit>
 									</limits>
 								</rule>
@@ -160,9 +166,9 @@
 									<element>BUNDLE</element>
 									<limits>
 										<limit>
-											<counter>BRACH</counter>
+											<counter>BRANCH</counter>
 											<value>COVEREDRATIO</value>
-											<minimum>0.70</minimum>
+											<minimum>0.01</minimum>
 										</limit>
 									</limits>
 								</rule>
@@ -171,6 +177,19 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0-M3</version>
+				<dependencies>
+					<dependency>
+						<groupId>org.apache.maven.surefire</groupId>
+						<artifactId>surefire-junit47</artifactId>
+						<version>3.0.0-M3</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+
 		</plugins>
 	</build>
 

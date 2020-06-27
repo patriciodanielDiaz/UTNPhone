@@ -47,8 +47,7 @@ public class CallBackofficeController {
             throws UserNotExistException, ParseException, RecordNotExistsException, LineNotExistsException {
 
         User user=userService.findByDni(dni);
-        Optional.ofNullable(user).orElseThrow(() -> new UserNotExistException());//no me queda otra porque necesito que el finByDni null en el login
-
+        Optional.ofNullable(user).orElseThrow(() -> new UserNotExistException());
         Line line=lineService.getLineByNumber(lineNumber);
 
         List<Call> calls = new ArrayList<>();

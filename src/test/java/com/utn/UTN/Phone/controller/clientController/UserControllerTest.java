@@ -49,7 +49,7 @@ public class UserControllerTest {
     SessionManager sessionManager;
 
     @Before
-    public void setUp() throws UserNotExistException {
+    public void setUp() {
         initMocks(this);
         PowerMockito.mockStatic(RestUtil.class);
         userController = new UserController(userService, sessionManager);
@@ -58,7 +58,7 @@ public class UserControllerTest {
     }
 
     @Test
-    public void getProfileOk() throws PermissionDeniedException, UserNotExistException {
+    public void TestGetProfileOk() throws PermissionDeniedException, UserNotExistException {
 
             profileProyection= new ProfileProyection() {
                 @Override public String getUser() {return "mariano";}

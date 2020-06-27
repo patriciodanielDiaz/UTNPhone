@@ -1,6 +1,8 @@
 package com.utn.UTN.Phone.controller.clientController;
 
 import com.utn.UTN.Phone.dto.LineDto;
+import com.utn.UTN.Phone.exceptions.LineNotExistsException;
+import com.utn.UTN.Phone.exceptions.PermissionDeniedException;
 import com.utn.UTN.Phone.exceptions.RecordNotExistsException;
 import com.utn.UTN.Phone.exceptions.UserNotExistException;
 import com.utn.UTN.Phone.model.Line;
@@ -12,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,13 +34,10 @@ public class LineController {
     public ResponseEntity<List<LineDto>> getUserLines(@RequestHeader("Authorization") String sessionToken)
                                                   throws UserNotExistException, RecordNotExistsException {
 
-        User currentUser = getCurrentUser(sessionToken);
+        User currentUser = Optional.ofNullable(sessionManager.getCurrentUser(sessionToken)).orElseThrow(UserNotExistException::new);
         List<Line> lines=lineService.getLinesByUser(currentUser);
 
         return (lines.size() > 0) ? ResponseEntity.ok(LineDto.transferToLineDto(lines)) : ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-     private User getCurrentUser(String sessionToken) throws UserNotExistException {
-        return Optional.ofNullable(sessionManager.getCurrentUser(sessionToken)).orElseThrow(UserNotExistException::new);
-    }
 }
