@@ -1,0 +1,37 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "title": "calls",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+        },
+        "origincall": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+        },
+        "destinationcall": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+        },
+        "duration": {
+            "type": "number",
+            "description": "tiempo medido en minutos\n"
+        },
+        "price": {
+            "type": "number"
+        },
+        "total": {
+            "type": "number"
+        },
+        "idrate": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+        }
+    },
+    "required": [
+        "id"
+    ]
+}

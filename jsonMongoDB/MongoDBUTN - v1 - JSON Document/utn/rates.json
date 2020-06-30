@@ -1,0 +1,8 @@
+{
+    "id": ObjectId("507f1f77bcf86cd799439011"),
+    "type": "Lorem",
+    "pricexmin": -1.3263529511311514e+30,
+    "cost": 1.4767692785085373e+30,
+    "destinationcity": ObjectId("507f1f77bcf86cd799439011"),
+    "origincity": ObjectId("507f1f77bcf86cd799439011")
+}

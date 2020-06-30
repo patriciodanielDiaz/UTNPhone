@@ -1,0 +1,8 @@
+{
+    "id": ObjectId("507f1f77bcf86cd799439011"),
+    "name": "Lorem",
+    "lastname": "Lorem",
+    "dni": "Lorem",
+    "password": "Lorem",
+    "usertype": "Cliente"
+}

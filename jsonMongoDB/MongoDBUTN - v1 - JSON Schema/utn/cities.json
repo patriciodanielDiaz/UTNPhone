@@ -1,0 +1,22 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "title": "cities",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+        },
+        "city": {
+            "type": "string"
+        },
+        "iduser": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+        }
+    },
+    "required": [
+        "id"
+    ]
+}

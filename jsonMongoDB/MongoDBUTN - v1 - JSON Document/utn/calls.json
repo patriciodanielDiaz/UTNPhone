@@ -1,0 +1,9 @@
+{
+    "id": ObjectId("507f1f77bcf86cd799439011"),
+    "origincall": ObjectId("507f1f77bcf86cd799439011"),
+    "destinationcall": ObjectId("507f1f77bcf86cd799439011"),
+    "duration": 29,
+    "price": -4.071113070733366e+29,
+    "total": -1.5911592639606896e+30,
+    "idrate": ObjectId("507f1f77bcf86cd799439011")
+}

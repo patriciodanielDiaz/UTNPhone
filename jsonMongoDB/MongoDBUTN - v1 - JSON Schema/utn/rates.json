@@ -1,0 +1,37 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "title": "rates",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+        },
+        "type": {
+            "type": "string"
+        },
+        "pricexmin": {
+            "type": "number"
+        },
+        "cost": {
+            "type": "number"
+        },
+        "destinationcity": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+        },
+        "origincity": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+        }
+    },
+    "required": [
+        "id"
+    ],
+    "dependencies": {
+        "id": [
+            "type"
+        ]
+    }
+}

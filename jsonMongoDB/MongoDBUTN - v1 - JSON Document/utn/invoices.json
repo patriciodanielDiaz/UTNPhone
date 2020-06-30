@@ -1,0 +1,8 @@
+{
+    "id": ObjectId("507f1f77bcf86cd799439011"),
+    "iduser": ObjectId("507f1f77bcf86cd799439011"),
+    "idline": ObjectId("507f1f77bcf86cd799439011"),
+    "total": -2.17264228903546e+29,
+    "expirationdate": ISODate("2016-04-08T15:06:21.595Z"),
+    "date_issued": ISODate("2016-04-08T15:06:21.595Z")
+}
