@@ -26,8 +26,9 @@ Ejecucion de pruebas
 
 ### Analice las pruebas end-to-end 🔩
 
-**Test realizados con Jacoco- JUnit
-**Postman
+* Test realizados con Jacoco.
+* JUnit
+* Postman
 
 
 ## Despliegue 📦
