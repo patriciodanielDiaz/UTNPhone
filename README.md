@@ -45,8 +45,8 @@ _Agrega notas adicionales sobre como hacer deploy_
 
 _Menciona las herramientas que utilizaste para crear tu proyecto_
 
-**[Spring](https://spring.io/) - El framework web usado de java
-**[Maven](https://maven.apache.org/) - Manejador de dependencias
+* [Spring](https://spring.io/) - El framework web usado de java
+* [Maven](https://maven.apache.org/) - Manejador de dependencias
 
 
 ## Contribuyendo 🖇️
