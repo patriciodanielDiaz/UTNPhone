@@ -1,0 +1,37 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "title": "cities",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+        },
+        "city": {
+            "type": "string"
+        },
+        "province": {
+            "type": "array",
+            "additionalItems": true,
+            "uniqueItems": false,
+            "items": [
+                {
+                    "type": "string",
+                    "displayName": "id",
+                    "pattern": "^[a-fA-F0-9]{24}$"
+                },
+                {
+                    "type": "string",
+                    "displayName": "province"
+                }
+            ]
+        },
+        "prefix": {
+            "type": "string"
+        }
+    },
+    "capped": false,
+    "validationLevel": "Off",
+    "validationAction": "Warn"
+}

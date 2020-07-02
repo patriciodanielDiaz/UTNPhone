@@ -1,0 +1,34 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "title": "provinces",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+        },
+        "province": {
+            "type": "string"
+        },
+        "country": {
+            "type": "array",
+            "additionalItems": true,
+            "uniqueItems": false,
+            "items": [
+                {
+                    "type": "string",
+                    "displayName": "id",
+                    "pattern": "^[a-fA-F0-9]{24}$"
+                },
+                {
+                    "type": "string",
+                    "displayName": "country"
+                }
+            ]
+        }
+    },
+    "capped": false,
+    "validationLevel": "Off",
+    "validationAction": "Warn"
+}

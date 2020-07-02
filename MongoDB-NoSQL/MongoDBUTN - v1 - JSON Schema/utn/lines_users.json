@@ -1,0 +1,54 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "title": "lines_users",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+        },
+        "number": {
+            "type": "number"
+        },
+        "user": {
+            "type": "array",
+            "additionalItems": true,
+            "uniqueItems": false,
+            "items": [
+                {
+                    "type": "string",
+                    "displayName": "id",
+                    "pattern": "^[a-fA-F0-9]{24}$"
+                },
+                {
+                    "type": "string",
+                    "displayName": "name"
+                },
+                {
+                    "type": "string",
+                    "displayName": "lastname"
+                }
+            ]
+        },
+        "type": {
+            "type": "array",
+            "additionalItems": true,
+            "uniqueItems": false,
+            "items": [
+                {
+                    "type": "string",
+                    "displayName": "id",
+                    "pattern": "^[a-fA-F0-9]{24}$"
+                },
+                {
+                    "type": "string",
+                    "displayName": "type"
+                }
+            ]
+        }
+    },
+    "capped": false,
+    "validationLevel": "Off",
+    "validationAction": "Warn"
+}

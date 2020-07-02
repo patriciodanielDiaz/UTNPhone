@@ -1,0 +1,61 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "title": "rates",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+        },
+        "type": {
+            "type": "string"
+        },
+        "pricexmin": {
+            "type": "number",
+            "mode": "double"
+        },
+        "cost": {
+            "type": "number",
+            "mode": "double"
+        },
+        "destinationcity": {
+            "type": "array",
+            "additionalItems": true,
+            "uniqueItems": false,
+            "items": [
+                {
+                    "type": "string",
+                    "displayName": "idcity"
+                },
+                {
+                    "type": "string",
+                    "displayName": "city"
+                }
+            ]
+        },
+        "origincity": {
+            "type": "array",
+            "additionalItems": true,
+            "uniqueItems": false,
+            "items": [
+                {
+                    "type": "string",
+                    "displayName": "idcity"
+                },
+                {
+                    "type": "string",
+                    "displayName": "city"
+                }
+            ]
+        }
+    },
+    "capped": false,
+    "validationLevel": "Off",
+    "validationAction": "Warn",
+    "dependencies": {
+        "id": [
+            "type"
+        ]
+    }
+}

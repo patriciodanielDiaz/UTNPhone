@@ -1,0 +1,54 @@
+{
+    "id": "507f1f77bcf86cd799439011",
+    "name": "Pepe",
+    "lastname": "Grillo",
+    "dni": "222222",
+    "password": "123456",
+    "usertype": "Cliente",
+    "city": [{
+        "Id":"507f1f77bcf86cd799439011",
+        "city":"Mar del Plata",
+        "province":
+        [{
+            "Id":"507f1f77bcf86cd799439011",
+            "province":"Buenos Aires"
+         }]
+    }],
+    "line": [{
+        "id":"507f1f77bcf86cd799439011",
+        "number":"15549847"
+     } ]
+}
+
+db.customers.insert(
+ {
+     "id": "507f1f77bcf86cd799439011",
+     "name": "Pepe",
+     "lastname": "Grillo",
+     "dni": "222222",
+     "password": "123456",
+     "usertype": "Cliente",
+   "city": [
+        {
+         "Id": "507f1f77bcf86cd799439011",
+         "city": "Mar del Plata",
+         "province":
+         [
+                {
+            "Id": "507f1f77bcf86cd799439011",
+             "province": "Buenos Aires"
+
+                }
+            ]
+
+        }
+    ],
+    "line": [
+        {
+         "id": "507f1f77bcf86cd799439011",
+        "number": "15549847"
+
+        }
+    ]
+
+})

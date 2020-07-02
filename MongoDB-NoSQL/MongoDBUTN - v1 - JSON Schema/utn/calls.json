@@ -1,0 +1,103 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "title": "calls",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+        },
+        "origincall": {
+            "type": "array",
+            "additionalItems": true,
+            "uniqueItems": false,
+            "items": [
+                {
+                    "type": "string",
+                    "displayName": "id"
+                },
+                {
+                    "type": "string",
+                    "displayName": "number"
+                }
+            ]
+        },
+        "destinationcall": {
+            "type": "array",
+            "additionalItems": true,
+            "uniqueItems": false,
+            "items": [
+                {
+                    "type": "string",
+                    "displayName": "id"
+                },
+                {
+                    "type": "string",
+                    "displayName": "number"
+                }
+            ]
+        },
+        "duration": {
+            "type": "number",
+            "description": "tiempo medido en minutos\n"
+        },
+        "total": {
+            "type": "number",
+            "mode": "double"
+        },
+        "rate": {
+            "type": "array",
+            "additionalItems": true,
+            "uniqueItems": false,
+            "items": [
+                {
+                    "type": "string",
+                    "displayName": "id",
+                    "pattern": "^[a-fA-F0-9]{24}$"
+                },
+                {
+                    "type": "number",
+                    "mode": "double",
+                    "displayName": "price"
+                },
+                {
+                    "type": "array",
+                    "additionalItems": true,
+                    "uniqueItems": false,
+                    "displayName": "origin",
+                    "items": [
+                        {
+                            "type": "string",
+                            "displayName": "idcity",
+                            "pattern": "^[a-fA-F0-9]{24}$"
+                        },
+                        {
+                            "type": "string",
+                            "displayName": "city"
+                        }
+                    ]
+                },
+                {
+                    "type": "array",
+                    "additionalItems": true,
+                    "uniqueItems": false,
+                    "displayName": "destination",
+                    "items": [
+                        {
+                            "type": "string",
+                            "displayName": "idcity"
+                        },
+                        {
+                            "type": "string",
+                            "displayName": "city"
+                        }
+                    ]
+                }
+            ]
+        }
+    },
+    "capped": false,
+    "validationLevel": "Off",
+    "validationAction": "Warn"
+}

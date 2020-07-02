@@ -1,0 +1,82 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "title": "invoices",
+    "additionalProperties": false,
+    "properties": {
+        "id": {
+            "type": "string",
+            "pattern": "^[a-fA-F0-9]{24}$"
+        },
+        "user": {
+            "type": "array",
+            "additionalItems": true,
+            "uniqueItems": false,
+            "items": [
+                {
+                    "type": "string",
+                    "displayName": "id",
+                    "pattern": "^[a-fA-F0-9]{24}$"
+                },
+                {
+                    "type": "string",
+                    "displayName": "name"
+                },
+                {
+                    "type": "string",
+                    "displayName": "lastname"
+                },
+                {
+                    "id": "dni",
+                    "type": "string",
+                    "displayName": "dni"
+                }
+            ]
+        },
+        "line": {
+            "type": "array",
+            "additionalItems": true,
+            "uniqueItems": false,
+            "items": [
+                {
+                    "type": "string",
+                    "displayName": "id",
+                    "pattern": "^[a-fA-F0-9]{24}$"
+                },
+                {
+                    "id": "number",
+                    "type": "string",
+                    "description": "number",
+                    "displayName": "number"
+                }
+            ]
+        },
+        "total": {
+            "type": "number",
+            "mode": "double"
+        },
+        "expirationdate": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "date_issued": {
+            "type": "string",
+            "format": "date-time"
+        },
+        "state": {
+            "type": "string",
+            "enum": [
+                "pagada",
+                "impaga"
+            ]
+        }
+    },
+    "capped": false,
+    "validationLevel": "Off",
+    "validationAction": "Warn",
+    "dependencies": {
+        "id": [
+            "user"
+        ]
+    }
+}
