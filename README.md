@@ -29,17 +29,10 @@ Ejecucion de pruebas
 **Test realizados con Jacoco- JUnit
 **Postman
 
-### Y las pruebas de estilo de codificación ⌨️
-
-_Explica que verifican estas pruebas y por qué_
-
-```
-Da un ejemplo
-```
 
 ## Despliegue 📦
 
-_Agrega notas adicionales sobre como hacer deploy_
+
 
 ## Construido con 🛠️
 
