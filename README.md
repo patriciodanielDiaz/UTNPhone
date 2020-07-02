@@ -21,8 +21,8 @@ Springboot
 
 Ejecucion de pruebas
 
-1- mvn clean.
-2- mvn install
+* 1 - mvn clean.
+* 2 - mvn install
 
 ### Analice las pruebas end-to-end 🔩
 
